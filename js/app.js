@@ -287,16 +287,32 @@ function addRecord(text, name) {
 
 function switchTab(name) {
   state.activeTab = name;
-  $$(".tab").forEach(b => b.classList.toggle("active", b.dataset.tab === name));
+  $$(".tab").forEach(b => {
+    const on = b.dataset.tab === name;
+    b.classList.toggle("active", on);
+    b.setAttribute("aria-selected", on ? "true" : "false");
+    b.tabIndex = on ? 0 : -1;
+  });
   ["summary", "review", "data", "timeline", "fhir"].forEach(k => { const el = $("#tab-" + k); if (el) el.hidden = (k !== name); });
 }
 
 function wire() {
   $("#langSel").onchange = e => { state.lang = e.target.value; persist(); applyLang(); };
-  $$(".tab").forEach(b => b.onclick = () => switchTab(b.dataset.tab));
+  const tabs = $$(".tab");
+  tabs.forEach((b, i) => {
+    b.setAttribute("role", "tab");
+    b.onclick = () => switchTab(b.dataset.tab);
+    b.onkeydown = e => {
+      if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+      e.preventDefault();
+      const n = (i + (e.key === "ArrowRight" ? 1 : tabs.length - 1)) % tabs.length;
+      tabs[n].focus(); switchTab(tabs[n].dataset.tab);
+    };
+  });
 
   const dz = $("#drop");
   dz.onclick = () => $("#fileInput").click();
+  dz.onkeydown = e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); $("#fileInput").click(); } };
   $("#fileInput").onchange = e => handleFiles([...e.target.files]);
   ["dragover", "dragenter"].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.add("over"); }));
   ["dragleave", "drop"].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.remove("over"); }));
