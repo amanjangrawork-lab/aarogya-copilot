@@ -8,7 +8,9 @@ let state = {
   wellness: JSON.parse(localStorage.getItem("ac_wellness") || "[]"),
   profile: {},
   activeTab: "summary",
-  gemini: "",
+  gemini: "", // ephemeral by design — never persisted
+  geminiNote: "",
+  ocrLang: localStorage.getItem("ac_ocrLang") || "eng",
 };
 try { state.profile = JSON.parse(localStorage.getItem("ac_profile") || "{}"); } catch { state.profile = {}; }
 
@@ -16,6 +18,7 @@ function persist() {
   localStorage.setItem("ac_records", JSON.stringify(state.records));
   localStorage.setItem("ac_wellness", JSON.stringify(state.wellness));
   localStorage.setItem("ac_lang", state.lang);
+  localStorage.setItem("ac_ocrLang", state.ocrLang || "eng");
   saveProfile(state.profile);
 }
 
@@ -109,7 +112,10 @@ function renderTimeline() {
   const events = [
     ...state.records.map(r => ({ date: (r.dates[0] || r.createdAt.slice(0, 10)), icon: docIcon(r.docType), title: r.fileName, sub: `${r.diagnoses.map(d => d.display).join(", ") || r.docType} · ${r.medicines.length} meds · ${r.labs.filter(l => l.flag !== "normal").length} flags` })),
     ...state.wellness.map(w => ({ date: w.date, icon: "❤️", title: `Wellness — BP ${w.bp || "–"}, Sugar ${w.sugar || "–"}, Wt ${w.wt || "–"}`, sub: w.note || "" })),
-  ].sort((a, b) => String(a.date).localeCompare(String(b.date)));
+  ].sort((a, b) => {
+    try { return parseRecordDate(a.date) - parseRecordDate(b.date); }
+    catch { return String(a.date).localeCompare(String(b.date)); }
+  });
   if (!events.length) { box.innerHTML = `<div class="empty">Your unified timeline will appear here — records + wellness logs in one place.</div>`; return; }
   box.innerHTML = `<div class="timeline">${events.map(e => `<div class="t-item"><div class="t-dot">${e.icon}</div><div><b>${escapeHtml(e.title)}</b><div class="muted small">${escapeHtml(e.date)} · ${escapeHtml(e.sub)}</div></div></div>`).join("")}</div>`;
 }
@@ -241,7 +247,11 @@ function wire() {
   };
 
   // settings / gemini
-  $("#settingsBtn").onclick = () => $("#setModal").showModal();
+  $("#settingsBtn").onclick = () => {
+    $("#gemKey").value = state.gemini || "";
+    $("#ocrLang").value = state.ocrLang || "eng";
+    $("#setModal").showModal();
+  };
   $("#saveSet").onclick = () => {
     state.gemini = $("#gemKey").value.trim(); state.ocrLang = $("#ocrLang").value;
     state.geminiNote = ""; persist(); $("#setModal").close(); renderSummary();

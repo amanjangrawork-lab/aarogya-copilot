@@ -9,7 +9,7 @@ Offline-first, zero-backend static app. Everything runs in the browser; data sta
         │
         ▼
 ┌──────────────────┐   pdf.js text layer (fast path for digital PDFs)
-│  Ingest + OCR    │── Tesseract.js fallback (scans/photos, eng+hin+tel+tam)
+│  Ingest + OCR    │── Tesseract.js fallback (scans/photos, eng + selectable hin/tel/tam)
 └────────┬─────────┘   progress bar; scanned-PDF page rendered to canvas then OCR
          ▼ raw text
 ┌──────────────────┐

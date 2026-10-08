@@ -6,7 +6,7 @@ Built for the **Altrix Labs — AI-Powered Personal Health Copilot** hackathon (
 
 ## ✨ What works (all offline, zero backend)
 
-- **Ingest + OCR**: PDF (pdf.js text layer) + photos/scans (Tesseract.js `eng+hin+tel+tam`) + paste-text; scanned-PDF auto-render → OCR
+- **Ingest + OCR**: PDF (pdf.js text layer) + photos/scans (Tesseract.js `eng` + selectable `hin`/`tel`/`tam`) + paste-text; scanned-PDF auto-render → OCR
 - **Extraction**: medicines + dosages + schedules, 14 lab tests with LOINC + high/low/borderline flags, diagnoses (ICD-10 + SNOMED CT), dates, doctor/facility, doc-type
 - **Simple summary**: headline, "what this abnormal value means", meds explained, questions-to-ask-doctor, next steps — in **English, हिन्दी, తెలుగు, தமிழ்** + optional Gemini 1.5 Flash enhancement (key optional)
 - **Timeline + profile**: records + wellness logs (BP/sugar/weight) in one chronological view, localStorage persistence

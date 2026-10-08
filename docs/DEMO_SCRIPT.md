@@ -2,7 +2,7 @@
 
 **0:00 — Hook (20s).** "Patients carry paper files nobody can read. Watch this prescription become plain language in 20 seconds." Open `index.html`.
 
-**0:20 — Upload + OCR (40s).** Click **🧪 Lab report** demo (or drag `sample-data/02-lab-report.txt`, or a real photo to show Tesseract OCR with progress bar). Point out: digital PDFs use pdf.js; photos fall back to Tesseract eng+hin+tel+tam.
+**0:20 — Upload + OCR (40s).** Click **🧪 Lab report** demo (or drag `sample-data/02-lab-report.txt`, or a real photo to show Tesseract OCR with progress bar). Point out: digital PDFs use pdf.js; photos fall back to Tesseract eng + Hindi/Telugu/Tamil (selectable in Settings).
 
 **1:00 — AI summary (50s).** Simple-summary tab: headline, 🔴/⚠️/✅ flags, "what HbA1c 7.8% means", medicines, questions-to-ask-doctor. Switch language to हिन्दी → same summary in Hindi. Note disclaimer + safe wording.
 

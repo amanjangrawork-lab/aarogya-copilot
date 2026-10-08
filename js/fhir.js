@@ -13,6 +13,21 @@ function mockAbhaId() {
   return `${String(n()).slice(0, 2)}-${n()}-${n()}-${n()}`.replace(/(\d{2})-/, "$1-");
 }
 
+/* Indian records use DD/MM/YYYY; JS Date parses that as MM/DD/YYYY.
+   Parse DD/MM/YYYY explicitly so FHIR dates + timeline order stay correct. */
+function parseRecordDate(s) {
+  if (!s) return new Date();
+  const m = String(s).trim().match(/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})$/);
+  if (m) {
+    let dd = parseInt(m[1], 10), mm = parseInt(m[2], 10), yy = parseInt(m[3], 10);
+    if (yy < 100) yy += 2000;
+    if (mm > 12 && dd <= 12) { const t = dd; dd = mm; mm = t; } // tolerate MM/DD input
+    if (mm >= 1 && mm <= 12 && dd >= 1 && dd <= 31) return new Date(Date.UTC(yy, mm - 1, dd));
+  }
+  const d = new Date(s);
+  return isNaN(d) ? new Date() : d;
+}
+
 function buildFhirBundle(profile, records) {
   const pid = "patient-1";
   const bundle = {
@@ -37,6 +52,7 @@ function buildFhirBundle(profile, records) {
 
   records.forEach((rec, i) => {
     const date = (rec.dates && rec.dates[0]) || rec.createdAt.slice(0, 10);
+    const isoDate = parseRecordDate(date).toISOString();
     rec.labs.forEach((l, j) => {
       bundle.entry.push({ resource: {
         resourceType: "Observation", id: `obs-${i}-${j}`,
@@ -44,7 +60,7 @@ function buildFhirBundle(profile, records) {
         status: "final",
         code: { coding: [{ system: "http://loinc.org", code: l.loinc || "unknown", display: l.test }], text: l.test },
         subject: { reference: "Patient/" + pid },
-        effectiveDateTime: new Date(date).toISOString ? new Date(date).toISOString() : new Date().toISOString(),
+        effectiveDateTime: isoDate,
         valueQuantity: typeof l.value === "number" ? { value: l.value, unit: l.unit } : undefined,
         valueString: typeof l.value !== "number" ? String(l.value) + " " + l.unit : undefined,
         interpretation: l.flag !== "normal" ? [{ text: l.flag }] : [],
@@ -58,7 +74,7 @@ function buildFhirBundle(profile, records) {
         medicationCodeableConcept: { text: `${m.name} ${m.dosage}` },
         subject: { reference: "Patient/" + pid },
         dosageInstruction: [{ text: `${m.frequency}${m.duration ? ", " + m.duration : ""}` }],
-        authoredOn: new Date(date).toISOString ? new Date(date).toISOString() : new Date().toISOString(),
+        authoredOn: isoDate,
       }});
     });
     rec.diagnoses.forEach((d, j) => {
