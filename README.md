@@ -4,6 +4,8 @@ Upload prescriptions, lab reports & discharge summaries → **OCR → structured
 
 Built for the **Altrix Labs — AI-Powered Personal Health Copilot** hackathon (Round 1).
 
+**🔴 Live demo:** `https://amanjangrawork-lab.github.io/aarogya-copilot/` · **Repo:** `https://github.com/amanjangrawork-lab/aarogya-copilot`
+
 ## ✨ What works (all offline, zero backend)
 
 - **Ingest + OCR**: PDF (pdf.js text layer) + photos/scans (Tesseract.js `eng` + selectable `hin`/`tel`/`tam`) + paste-text; scanned-PDF auto-render → OCR
