@@ -76,7 +76,7 @@ function renderSummary() {
     <h4>${escapeHtml(SECTION_TITLE.abnormal[state.lang])} (${abn.length || rec.labs.length ? (abn.length + " flagged / " + rec.labs.length + " measured") : "none"})</h4>
     ${rec.labs.length ? `<ul class="vals">${rec.labs.map(l => `<li>${flagBadge(l.flag)} <b>${escapeHtml(l.test)}</b> — ${escapeHtml(String(l.value))} ${escapeHtml(l.unit)} <span class="ref">(usual ${escapeHtml(String(l.low))}–${escapeHtml(String(l.high))})</span><br><span class="mean">${escapeHtml((l.meaning && (l.meaning[state.lang] || l.meaning.en)) || "")}</span><br><span class="muted small">Source: “${escapeHtml((l.span || "").slice(0, 80))}” · ${l.userConfirmed ? "✅ confirmed by you" : l.confidence + " confidence"}</span></li>`).join("")}</ul>` : `<p class="muted">No numeric lab values found in this record.</p>`}
     <h4>${escapeHtml(SECTION_TITLE.meds[state.lang])}</h4>
-    ${rec.medicines.length ? `<ul class="meds">${rec.medicines.map(m => `<li>💊 <b>${escapeHtml(m.name)}</b> ${escapeHtml(m.dosage)} · ${escapeHtml(m.frequency)}${m.duration ? " · " + escapeHtml(m.duration) : ""} <span class="muted small">${m.userConfirmed ? "✅ confirmed" : "· " + m.confidence}</span></li>`).join("")}</ul><p class="muted">Take exactly as prescribed. Never start, stop, or change a dose without your doctor. Drug names never translated.</p>` : `<p class="muted">No medicines detected in this record.</p>`}
+    ${rec.medicines.length ? `<ul class="meds">${rec.medicines.map(m => `<li>💊 <b translate="no">${escapeHtml(m.name)}</b> ${escapeHtml(m.dosage)} · ${escapeHtml(m.frequency)}${m.duration ? " · " + escapeHtml(m.duration) : ""} <span class="muted small">${m.userConfirmed ? "✅ confirmed" : "· " + m.confidence}</span></li>`).join("")}</ul><p class="muted">Take exactly as prescribed. Never start, stop, or change a dose without your doctor. Drug names never translated.</p>` : `<p class="muted">No medicines detected in this record.</p>`}
     <h4>${escapeHtml(SECTION_TITLE.ask[state.lang])}</h4>
     <ol class="ask">${s.ask.map(q => `<li>${escapeHtml(q)}</li>`).join("")}</ol>
     <h4>${escapeHtml(SECTION_TITLE.next[state.lang])}</h4>
@@ -284,7 +284,7 @@ function renderReview() {
     <h4>Medicines (${p.medicines.length})</h4>
     ${p.medicines.length ? p.medicines.map((m, i) => `
       <div class="rev-item ${m.needsReview ? "needs" : "ok"}">
-        <div><b>${escapeHtml(m.name)}</b> ${m.confidence === "high" ? `<span class="badge ok">High</span>` : m.confidence === "medium" ? `<span class="badge warn">Medium — verify</span>` : `<span class="badge bad">Low — confirm</span>`}</div>
+        <div><b translate="no">${escapeHtml(m.name)}</b> ${m.confidence === "high" ? `<span class="badge ok">High</span>` : m.confidence === "medium" ? `<span class="badge warn">Medium — verify</span>` : `<span class="badge bad">Low — confirm</span>`}</div>
         <div class="row">
           <label>Dose <input data-pmed="${i}" data-f="dosage" value="${escapeHtml(m.dosage)}"></label>
           <label>Schedule <input data-pmed="${i}" data-f="frequency" value="${escapeHtml(m.frequency)}"></label>

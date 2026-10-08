@@ -48,6 +48,7 @@ input,select,textarea{font-family:inherit;font-size:16px} /* prevents iOS zoom *
 .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:20px;margin-bottom:16px;box-shadow:var(--shadow-sm);min-width:0}
 .card h3{margin:0 0 8px;font-size:17px}
 .card h4{margin:16px 0 8px;font-size:14px;text-transform:uppercase;letter-spacing:.06em;color:var(--mut);font-family:var(--font-body)}
+.hero{background:linear-gradient(180deg,#ffffff 0%,#f4f8fd 100%);border:1px solid var(--line);border-radius:var(--r-lg);padding:20px 22px;margin-bottom:16px;box-shadow:var(--shadow-sm);border-left:6px solid var(--pri-dark)}
 .hero h1{font-size:clamp(26px,3.4vw,36px);margin:6px 0;font-weight:700}
 .hero h1 .pill{font-family:var(--font-body)}
 .pill{background:#e3f0ff;color:#0b4fa0;border-radius:999px;padding:3px 12px;font-size:11px;font-weight:800;white-space:nowrap}
@@ -67,6 +68,7 @@ input,select,textarea{font-family:inherit;font-size:16px} /* prevents iOS zoom *
 .btn.full{width:100%;margin:6px 0}.btn.small{min-height:40px;padding:0 12px;font-size:12.5px}
 .btn.chip{background:#eef4ff;border-color:#c9ddff}
 .btn.chip:hover{background:#e0efff}
+.btn.chip.on{background:var(--pri-dark);border-color:var(--pri-dark);color:#fff}
 .btn.danger{color:var(--bad)}
 .btn:disabled{opacity:.6;cursor:not-allowed;transform:none;box-shadow:none}
 .row{display:flex;gap:10px;align-items:center;margin-top:12px;flex-wrap:wrap}

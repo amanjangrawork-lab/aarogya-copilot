@@ -14,3 +14,11 @@
 
 ## Judge 60-second path (no narration needed)
 1. 🧪 Lab → 🔍 Review Confirm → Summary + 🔊 → हिन्दी → Timeline trends → FHIR Export → ✅ self-check. Done.
+
+## Hindi narration lines (speak these on camera — offline, no key needed)
+- “Ye Aarogya Copilot hai. Kagaz ki reports ko aasaan Hindi me samjhata hai.”
+- (Lab demo) “Ye lab report hai. HbA1c 7.8 — matlab pichhle teen mahine se sugar badhi hui hai. Ye salah nahi, sirf jaankari hai.”
+- (Review) “Peela nishaan wali dawai khud save nahi hoti — pehle aap confirm karte hain.”
+- (Hindi toggle + 🔊) “Ab wahi summary Hindi me — dawaiyon ke naam English me hi rehte hain.”
+- (Timeline) “Saari reports ek timeline me — kaunsi dawai badli, kaunsa test bigda, sab dikhta hai.”
+- (Close) “Data sirf aapke browser me rehta hai. Ye salah nahi deta — doctor se milna zaroori hai.”

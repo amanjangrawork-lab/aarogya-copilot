@@ -33,6 +33,6 @@ Open the **live URL** (or double-click `index.html`). Fast static app, demos wor
 - **Demo 10%:** `slides.html` (Print to PDF) + `docs/DEMO_SCRIPT.md` + optional video.
 
 ## Trust proof
-`docs/TRUST_CARD.md` (1 page) + `js/selftest.js` (7/7) + `sample-data/07-master-test-matrix.csv` (46 checks). Zero backend — data in localStorage only, Gemini key in memory only.
+`docs/TRUST_CARD.md` (1 page) + `js/selftest.js` (11/11) + `sample-data/07-master-test-matrix.csv` (46 checks). Zero backend — data in localStorage only, Gemini key in memory only.
 
 Known limits (honest): heavy handwriting needs Indic model; adult-general ranges — confirm with your lab/doctor; mock ABHA only, gateway-ready.

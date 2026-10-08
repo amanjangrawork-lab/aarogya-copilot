@@ -14,4 +14,4 @@ Persona: caregiver for parent with diabetes/BP, Hindi/Telugu first. Job: what ch
 | FHIR validity | R4 required-field badge green | `validateFhirBundle()` per fhir-developer cardinality rules; gaps listed, not hidden |
 | Safety | Educational only, no diagnosis/dose advice | Disclaimer + hedged wording + emergency 108/112 banner, negation guard (dengue negative etc) |
 
-Known limits (honest): heavy handwriting needs Indic model; adult-general ranges — confirm with doctor/lab. No live ABDM — mock only, gateway-ready.
+Known limits (honest): heavy handwriting needs Indic model; adult-general ranges — confirm with doctor/lab. No live ABDM — mock only, gateway-ready. Review/conflict screens are English-only; summaries + main UI cover EN/HI/TE/TA.

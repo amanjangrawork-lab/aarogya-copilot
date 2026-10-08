@@ -21,7 +21,7 @@ const LAB_REFERENCE = [
       hi: "खून में ऑक्सीजन ले जाने वाला प्रोटीन। कम मतलब एनीमिया — थकान, कमजोरी।",
       te: "ఆక్సిజన్ మోసే ప్రోటీన్. తక్కువ అంటే రక్తహీనత — అలసట, బలహీనత.", ta: "ஆக்ஸிஜனை சுமக்கும் புரதம். குறைவு எனில் இரத்தசோகை — சோர்வு." } },
   { key: "wbc", names: ["wbc", "white blood cell", "total leukocyte", "tlc", "leukocyte"], unit: "/µL", low: 4000, high: 11000, loinc: "6690-2", display: "WBC (infection fighters)",
-    meaning: { en: "Infection-fighting cells. High often means infection/inflammation; very low needs prompt medical review.",
+    meaning: { en: "Infection-fighting cells. High often means infection/inflammation; a critically low count needs prompt medical review.",
       hi: "संक्रमण से लड़ने वाली कोशिकाएं। ज्यादा अक्सर संक्रमण/सूजन, बहुत कम तुरंत डॉक्टर को दिखाएं।",
       te: "ఇన్ఫెక్షన్‌తో పోరాడే కణాలు. ఎక్కువ అంటే ఇన్ఫెక్షన్.", ta: "தொற்றை எதிர்க்கும் செல்கள். அதிகம் எனில் தொற்று." } },
   { key: "platelet", names: ["platelet", "platelets", "thrombocyte"], unit: "/µL", low: 150000, high: 450000, loinc: "777-3", display: "Platelets (clotting)",
