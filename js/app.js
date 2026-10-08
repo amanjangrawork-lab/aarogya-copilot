@@ -61,7 +61,7 @@ function renderProfile() {
 function renderSummary() {
   const box = $("#summaryBox");
   if (!state.records.length) {
-    box.innerHTML = `<div class="empty">📤 <b>No records yet.</b><br>Upload a prescription/lab PDF or photo, paste text, or load the 1-click demo data above to see the AI summary here.</div>`;
+    box.innerHTML = `<div class="empty">📤 <b>No records yet.</b><br>Upload a prescription/lab photo or PDF, paste report text, or load the example report above to see your health summary here.</div>`;
     $("#geminiBox").innerHTML = ""; return;
   }
   const rec = state.records[state.records.length - 1];
@@ -103,11 +103,11 @@ function renderSummary() {
       speechSynthesis.speak(u);
     } catch { $("#status").textContent = "Audio not supported in this browser."; }
   };
-  // Gemini optional
+  // Gemini optional (key lives only in Settings; no upsell inside the medical summary)
   const g = $("#geminiBox");
   if (state.geminiNote) g.innerHTML = `<div class="gemini"><h4>✨ Gemini AI explanation</h4><p>${escapeHtml(state.geminiNote)}</p></div>`;
   else if (state.gemini) g.innerHTML = `<button class="btn small" id="enhanceBtn">✨ Enhance with Gemini</button>`;
-  else g.innerHTML = `<p class="muted">Tip: add a free Gemini API key in Settings to get a second AI explanation alongside the offline one.</p>`;
+  else g.innerHTML = "";
   const eb = $("#enhanceBtn");
   if (eb) eb.onclick = async () => {
     eb.disabled = true; eb.textContent = "Thinking…";
@@ -416,22 +416,31 @@ function wire() {
     if (!tx) { $("#status").textContent = "Paste some report text first, or upload a file."; return; }
     addRecord(tx, "pasted-text"); $("#pasteBox").value = "";
   };
-  $$("#demoBtns button").forEach(b => b.onclick = () => {
-    const s = SAMPLES.find(x => x.id === b.dataset.sample);
+  const exLoad = $("#exampleLoad");
+  if (exLoad) exLoad.onclick = () => {
+    const sel = $("#exampleSel");
+    const s = SAMPLES.find(x => x.id === (sel ? sel.value : "lab")) || SAMPLES[0];
     addRecord(s.text, s.label + ".txt");
-  });
-  $("#clearBtn").onclick = () => {
-    if (!confirm("Delete all records on this device?")) return;
-    state.records = []; state.wellness = []; state.geminiNote = ""; state.pending = null; persist(); renderAll();
+  };
+  const eraseBtn = $("#eraseBtn");
+  if (eraseBtn) eraseBtn.onclick = () => {
+    if (!confirm("Erase everything on this device — records, wellness logs, profile link? This cannot be undone.")) return;
+    state.records = []; state.wellness = []; state.geminiNote = ""; state.pending = null; state.share = null; persist(); renderAll();
+    $("#setModal").close();
   };
   const selfBtn = $("#selfBtn");
   if (selfBtn) selfBtn.onclick = () => {
+    const out = $("#selfResult");
     try {
       const res = runSelfCheck();
       const passed = res.filter(r => r.pass).length;
-      $("#status").textContent = `Self-check: ${passed}/${res.length} passed — ${res.map(r => r.id + ":" + (r.pass ? "✅" : "❌")).join(" ")}`;
-      switchTab("review");
-    } catch (e) { $("#status").textContent = "Self-check failed: " + e.message; }
+      const msg = `Diagnostics: ${passed}/${res.length} passed — ${res.map(r => r.id + ":" + (r.pass ? "✅" : "❌")).join(" ")}`;
+      if (out) out.textContent = msg;
+      $("#status").textContent = msg;
+    } catch (e) {
+      if (out) out.textContent = "Diagnostics failed: " + e.message;
+      $("#status").textContent = "Self-check failed: " + e.message;
+    }
   };
 
   // profile modal

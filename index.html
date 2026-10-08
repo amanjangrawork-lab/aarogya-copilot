@@ -25,7 +25,7 @@
 <body>
 <a class="skip" href="#mainCol">Skip to main content</a>
 <header class="top" role="banner">
-  <div class="brand"><span class="logo">🩺</span><div><b>Aarogya Copilot</b><small>AI Personal Health Copilot · Altrix Labs Challenge</small></div></div>
+  <div class="brand"><span class="logo">🩺</span><div><b>Aarogya Copilot</b><small>AI Personal Health Copilot</small></div></div>
   <div class="top-actions">
     <select id="langSel" title="Language / भाषा">
       <option value="en">English</option><option value="hi">हिन्दी</option>
@@ -37,23 +37,22 @@
   </div>
 </header>
 
-<div class="emergency">🚨 <b>Emergency?</b> Chest pain, breathlessness, fainting, or severe symptoms — call <b>108 / 112</b> or go to the nearest hospital immediately. This app never replaces emergency care.</div>
-
 <main class="layout">
   <aside class="side">
+    <div class="card sos" role="note" aria-label="Emergency calling">
+      <div class="sos-title">🚨 Emergency? Call now</div>
+      <div class="sos-row">
+        <a class="btn sos-btn" href="tel:108">📞 Call 108</a>
+        <a class="btn sos-btn" href="tel:112">📞 Call 112</a>
+      </div>
+      <p class="muted small">Chest pain, breathlessness, fainting or severe symptoms — call immediately. This app never replaces emergency care.</p>
+    </div>
     <div class="card" id="profileCard"></div>
     <div class="card">
       <button class="btn full" id="profileBtn">👤 Setup profile</button>
       <button class="btn full" id="wellBtn" data-i18n="addWellness">Log BP / sugar / weight</button>
       <button class="btn full" id="remindBtn">🔔 Daily log reminder: off</button>
-      <button class="btn full" id="selfBtn">✅ Run self-check (offline test)</button>
-      <button class="btn full ghost" id="clearBtn">🗑️ Clear demo data</button>
       <p class="muted small" data-i18n="disclaimer">Educational only — not medical advice. Always consult your doctor.</p>
-      <p class="muted small"><a href="slides.html" target="_blank">📽️ Demo slides</a> · <a href="docs/ARCHITECTURE.md" target="_blank">🏗️ Architecture</a></p>
-    </div>
-    <div class="card small-card">
-      <b>Judge fast-track (60 sec)</b>
-      <ol class="small"><li>Click a demo button below</li><li>See Simple summary → flags + plain meaning</li><li>Open Health timeline + ABHA &amp; FHIR → Export</li></ol>
     </div>
   </aside>
 
@@ -61,9 +60,6 @@
     <div class="hero">
       <h1>Aarogya Copilot <span class="pill">ABDM-ready · 4 languages · offline-first · trust-gated</span></h1>
       <p data-i18n="tagline">Understand your prescriptions, labs &amp; discharge summaries — in plain language.</p>
-      <div class="judge" role="note">
-        <b>👋 New here? 60-second judge path:</b> click <b>🧪 Lab report</b> → <b>🔍 Review</b> (confirm 1 low item) → <b>Simple summary</b> → switch to <b>हिन्दी</b> → <b>Timeline</b> → <b>ABHA &amp; FHIR → Export</b>. No login, no key, works offline. <a href="docs/EVALUATION_NOTES.md" target="_blank">Full test guide</a>
-      </div>
     </div>
 
     <div class="card">
@@ -72,14 +68,17 @@
         <input type="file" id="fileInput" aria-label="Choose health record files" accept=".pdf,.png,.jpg,.jpeg,.txt" multiple hidden>
         <div class="bar"><div id="ocrBar"></div></div>
       </div>
-      <div class="demo-row"><span data-i18n="demo">Try 1-click demo data:</span>
+      <div class="demo-row"><span>New here? Try an example report:</span>
         <span id="demoBtns">
-          <button class="btn chip" data-sample="rx">💊 Prescription</button>
-          <button class="btn chip" data-sample="lab">🧪 Lab report</button>
-          <button class="btn chip" data-sample="discharge">🏥 Discharge</button>
-          <button class="btn chip" data-sample="diagnostic">🩻 Diagnostic</button>
-          <button class="btn chip" data-sample="rx2">💊 Rx-2 Thyroid</button>
-          <button class="btn chip" data-sample="lab2">🧪 Lab-2 Thyroid</button>
+          <select id="exampleSel" aria-label="Choose an example report">
+            <option value="lab">🧪 Lab report — sugar + cholesterol</option>
+            <option value="rx">💊 Prescription — diabetes + BP</option>
+            <option value="discharge">🏥 Discharge summary — fever</option>
+            <option value="diagnostic">🩻 Diagnostic — X-ray + ECG + USG</option>
+            <option value="rx2">💊 Prescription — thyroid + asthma</option>
+            <option value="lab2">🧪 Lab report — thyroid + vitamin D</option>
+          </select>
+          <button class="btn chip" id="exampleLoad">Load example</button>
         </span>
       </div>
       <label class="lbl" data-i18n="paste">Or paste report text</label>
@@ -124,12 +123,12 @@
       </div>
       <div id="shareBox"></div>
       <pre id="fhirJson" class="json"></pre>
-      <p class="muted small">Mock ABHA only — no real ABDM call. OTP for demo is <b>123456</b>. Bundle uses Patient + Observation (LOINC) + MedicationRequest + Condition (ICD-10/SNOMED CT) + DocumentReference. See <a href="docs/ARCHITECTURE.md" target="_blank">architecture doc</a>.</p>
+      <p class="muted small">Mock ABHA only — no real ABDM call. OTP for this demo is <b>123456</b>. Bundle uses Patient + Observation (LOINC) + MedicationRequest + Condition (ICD-10/SNOMED CT) + DocumentReference.</p>
     </div>
   </section>
 </main>
 
-<footer>⚠️ Educational summaries only — not a diagnosis. In an emergency seek care immediately. · Data stays in your browser (localStorage). · Built for the Altrix Labs AI Health Copilot challenge.</footer>
+<footer>⚠️ Educational summaries only — not a diagnosis. In an emergency call 108/112 immediately. · Your data stays in this browser only.</footer>
 
 <dialog id="profileModal"><form method="dialog"><h3>Health profile</h3>
 <label>Name <input id="fName" placeholder="e.g. Ramesh Kumar"></label>
@@ -156,7 +155,13 @@
 <label>Gemini API key (optional, for enhanced summary) <input id="gemKey" type="password" placeholder="AIza…"></label>
 <label>OCR language <select id="ocrLang"><option value="eng">English</option><option value="hin">+ Hindi (हिन्दी)</option><option value="tel">+ Telugu (తెలుగు)</option><option value="tam">+ Tamil (தமிழ்)</option></select></label>
 <p class="muted small">Offline extraction + summaries always work. Key is stored only in this browser's memory.</p>
-<div class="row"><button class="btn primary" id="saveSet">Save</button><button class="btn ghost">Close</button></div></form></dialog>
+<div class="row"><button class="btn primary" id="saveSet">Save</button><button class="btn ghost">Close</button></div>
+<hr>
+<h3>Data &amp; diagnostics</h3>
+<p class="muted small">Your records never leave this browser. Erasing removes everything on this device only.</p>
+<div class="row"><button class="btn small" id="selfBtn" type="button">✅ Run diagnostics</button><span id="selfResult" class="status" role="status"></span></div>
+<div class="row"><button class="btn small danger" id="eraseBtn" type="button">🗑️ Erase all my data</button></div>
+</form></dialog>
 
 <script src="js/reference.js"></script>
 <script src="js/extractor.js"></script>

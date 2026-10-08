@@ -3,13 +3,13 @@
 Open the **live URL** (or double-click `index.html`). Fast static app, demos work offline. This page alone is enough to score.
 
 ## 60-second test (must-pass)
-1. Click **🧪 Lab report** → auto-goes to **🔍 Review**: see 10 labs with source snippets + confidence. Click **Confirm & save**.
+1. In **Add a health record**, pick **Lab report** in the example dropdown → **Load example** → auto-goes to **🔍 Review**: see 10 labs with source snippets + confidence. Click **Confirm & save**.
 2. Read **Simple summary**: headline + flagged values (HbA1c 7.8% ▲, Hb 11.2 ▼, LDL 148…) + plain meanings + meds + doctor questions. Click **🔊 Listen**. Press **🖨️** anytime for the one-page doctor visit sheet.
 3. Switch to **हिन्दी** (top-right) — UI + summary translate, drug names stay English.
 4. Open **Health timeline** — search “metformin”, try Meds/Labs filters — active meds + HbA1c trend sparkline + chronological events.
 5. Open **Extracted data** → scroll to **📜 Provenance ledger** (every value → doc, span, confidence, status).
 6. Open **ABHA & FHIR** → see **✅ FHIR R4 valid** badge → **Export FHIR JSON** → **Create 7-day share link** → Revoke it.
-7. Click **✅ Run self-check** (sidebar) — expect 11/11.
+7. Open **Settings (⚙️)** → **Run diagnostics** — expect 11/11.
 
 ## Full test (5 min, every button)
 - **Upload:** drag PDF/JPG/PNG → progress bar → Review gate (files over 10 MB get a plain-language error). Multi-page scanned PDFs OCR every page. Or paste text + Analyze. Files in `sample-data/`.

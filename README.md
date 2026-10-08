@@ -1,6 +1,6 @@
 # 🩺 Aarogya Copilot — AI-Powered Personal Health Copilot
 
-> **Judge in 60 seconds, no help needed.** Open the live URL → click 🧪 Lab report → 🔍 Review → Confirm & save → Simple summary → हिन्दी → Timeline (trends) → ABHA & FHIR → Export. Click ✅ Run self-check for 11/11 proof. No login, no key, works offline.
+> **Judge in 60 seconds, no help needed.** Open the live URL → load the example Lab report → 🔍 Review → Confirm & save → Simple summary → हिन्दी → Timeline (trends) → ABHA & FHIR → Export. Settings → Run diagnostics for 11/11 proof. No login, no key, works offline.
 
 **What:** Caregiver uploads messy prescriptions, labs, discharge summaries → trustworthy health timeline + plain-language explanation.
 **Why:** Records are fragmented across paper, WhatsApp PDFs, labs. Caregiver job: “What changed, what meds are active, what to carry to doctor?”
@@ -13,13 +13,14 @@ Built for **Altrix Labs — AI-Powered Personal Health Copilot** Round 1.
 
 ## ✨ Everything works — no dead buttons
 
-- **Add record:** drag PDF/JPG/PNG (progress bar) / paste text + Analyze / 6 one-click demos (💊🧪🏥🩻 + Rx-2/Lab-2)
+- **Add record:** drag PDF/JPG/PNG (progress bar, 10 MB guard) / paste text + Analyze / example report loader (6 built-in examples)
+- **Emergency:** 🚨 SOS card with tap-to-call **108 / 112** (`tel:` links), always visible, plus disclaimer + range footnotes everywhere
 - **🔍 Review (trust gate):** low-confidence meds yellow-flagged with source snippet, editable dose/schedule, Confirm & save / Discard. Dose-changes offer Keep new / Keep earlier — your choice is logged. Nothing auto-saves uncertain.
 - **Simple summary:** headline, flagged labs with “what it means”, meds (names never translated), questions-to-ask-doctor, next steps, disclaimer + 🔊 Listen (en/hi/te/ta voices). 🖨️ Print produces a one-page doctor visit sheet.
 - **Extracted data:** tables + Delete + Original OCR text expandable (provenance) + 📜 provenance ledger (every value → doc, span, confidence, status)
 - **Timeline:** search + All/Meds/Labs/Visits/Wellness filters, active meds (latest per drug) + lab trend sparklines (rising/falling) + chronological events + wellness logs
 - **ABHA & FHIR:** ✅ FHIR R4 validity badge, mock Link ABHA (OTP `123456`), Simulate ABDM import, Export/Import FHIR JSON, 🔗 7-day revocable share link (mock consent)
-- **Side tools:** Setup profile, Log BP/sugar/weight, 🔔 daily log reminder (on-device only), ✅ Run self-check, 🗑️ Clear, ⚙️ Settings (Gemini key optional + OCR lang), 🖨️ Print clean summary. Installable PWA — works offline after first visit.
+- **Side tools:** Setup profile, Log BP/sugar/weight, 🔔 daily log reminder (on-device only), ⚙️ Settings (Gemini key optional + OCR lang + diagnostics 11/11 + erase-all), 🖨️ one-page doctor visit sheet. Installable PWA — works offline after first visit.
 - **Safety:** educational-only, hedged wording, no dose advice, emergency 108/112 banner always on top, negation guard (e.g. “dengue negative” not counted)
 
 ## 🚀 Start fast (30 sec)
@@ -51,7 +52,7 @@ Pipeline: ingest → multi-page OCR → rule extractor (confidence+span) → Rev
 ## 🌐 Deploy — Live URL field
 
 **GitHub Pages:** push folder → Settings → Pages → Deploy from branch → `main` `/root` → `https://<you>.github.io/<repo>/`.
-**Vercel/Netlify:** import repo, no build, output `.`. Verify: Lab demo → Review → Hindi → Timeline → Export.
+**Vercel/Netlify:** import repo, no build, output `.`. Verify: example Lab → Review → Hindi → Timeline → Export.
 
 ## 📽️ Demo + evaluation
 
