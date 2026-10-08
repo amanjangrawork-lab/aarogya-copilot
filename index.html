@@ -12,7 +12,8 @@
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 </head>
 <body>
-<header class="top">
+<a class="skip" href="#mainCol">Skip to main content</a>
+<header class="top" role="banner">
   <div class="brand"><span class="logo">🩺</span><div><b>Aarogya Copilot</b><small>AI Personal Health Copilot · Altrix Labs Challenge</small></div></div>
   <div class="top-actions">
     <select id="langSel" title="Language / भाषा">
@@ -33,6 +34,7 @@
     <div class="card">
       <button class="btn full" id="profileBtn">👤 Setup profile</button>
       <button class="btn full" id="wellBtn" data-i18n="addWellness">Log BP / sugar / weight</button>
+      <button class="btn full" id="selfBtn">✅ Run self-check (offline test)</button>
       <button class="btn full ghost" id="clearBtn">🗑️ Clear demo data</button>
       <p class="muted small" data-i18n="disclaimer">Educational only — not medical advice. Always consult your doctor.</p>
       <p class="muted small"><a href="slides.html" target="_blank">📽️ Demo slides</a> · <a href="docs/ARCHITECTURE.md" target="_blank">🏗️ Architecture</a></p>
@@ -43,10 +45,13 @@
     </div>
   </aside>
 
-  <section class="main">
+  <section class="main" id="mainCol">
     <div class="hero">
-      <h1>Aarogya Copilot <span class="pill">ABDM-ready · 4 languages · offline-first</span></h1>
+      <h1>Aarogya Copilot <span class="pill">ABDM-ready · 4 languages · offline-first · trust-gated</span></h1>
       <p data-i18n="tagline">Understand your prescriptions, labs &amp; discharge summaries — in plain language.</p>
+      <div class="judge" role="note">
+        <b>👋 New here? 60-second judge path:</b> click <b>🧪 Lab report</b> → <b>🔍 Review</b> (confirm 1 low item) → <b>Simple summary</b> → switch to <b>हिन्दी</b> → <b>Timeline</b> → <b>ABHA &amp; FHIR → Export</b>. No login, no key, works offline. <a href="docs/EVALUATION_NOTES.md" target="_blank">Full test guide</a>
+      </div>
     </div>
 
     <div class="card">
@@ -60,6 +65,9 @@
           <button class="btn chip" data-sample="rx">💊 Prescription</button>
           <button class="btn chip" data-sample="lab">🧪 Lab report</button>
           <button class="btn chip" data-sample="discharge">🏥 Discharge</button>
+          <button class="btn chip" data-sample="diagnostic">🩻 Diagnostic</button>
+          <button class="btn chip" data-sample="rx2">💊 Rx-2 Thyroid</button>
+          <button class="btn chip" data-sample="lab2">🧪 Lab-2 Thyroid</button>
         </span>
       </div>
       <label class="lbl" data-i18n="paste">Or paste report text</label>
@@ -68,14 +76,16 @@
       <span id="status" class="status"></span></div>
     </div>
 
-    <nav class="tabs">
+    <nav class="tabs" role="tablist" aria-label="Main views">
       <button class="tab active" data-tab="summary" data-i18n="tabSummary">Simple summary</button>
+      <button class="tab" data-tab="review">🔍 Review <span id="reviewBadge" class="badge warn" hidden></span></button>
       <button class="tab" data-tab="data" data-i18n="tabData">Extracted data</button>
       <button class="tab" data-tab="timeline" data-i18n="tabTimeline">Health timeline</button>
       <button class="tab" data-tab="fhir" data-i18n="tabFhir">ABHA &amp; FHIR</button>
     </nav>
 
     <div id="tab-summary" class="card"><div id="summaryBox"></div><div id="geminiBox"></div></div>
+    <div id="tab-review" class="card" hidden><div id="reviewBox"></div></div>
     <div id="tab-data" class="card" hidden><div id="dataBox"></div></div>
     <div id="tab-timeline" class="card" hidden>
       <div class="row"><h3 style="margin:0">Unified timeline</h3><button class="btn small" id="abhaImport2" onclick="document.getElementById('abhaImport').click()">⇩ Simulate ABHA import</button></div>
@@ -132,6 +142,7 @@
 <script src="js/i18n.js"></script>
 <script src="js/ocr.js"></script>
 <script src="js/samples.js"></script>
+<script src="js/selftest.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

@@ -1,0 +1,46 @@
+category,example_value,source_file,notes_for_ocr_check
+medicines,Metformin 500mg,01-prescription.txt,"Tab. Metformin 500mg — 1-0-1"
+medicines,Glimepiride 1mg,01-prescription.txt,1-0-0 before breakfast
+medicines,Amlodipine 5mg,01-prescription.txt,0-0-1 at bedtime
+medicines,Atorvastatin 10mg,01-prescription.txt,0-0-1 HS
+medicines,Paracetamol 650mg TDS,03-discharge-summary.txt,TDS + SOS variants
+medicines,Ondansetron 4mg SOS,03-discharge-summary.txt,SOS frequency
+medicines,Pantoprazole 40mg OD,03-discharge-summary.txt / 05-prescription-asthma-thyroid.txt,OD frequency
+medicines,Thyroxine 50mcg OD,05-prescription-asthma-thyroid.txt,mcg unit + before breakfast
+medicines,Montelukast 10mg HS,05-prescription-asthma-thyroid.txt,HS frequency
+medicines,Levocetirizine 5mg SOS,05-prescription-asthma-thyroid.txt,SOS
+medicines,Foracort 200mcg BD,05-prescription-asthma-thyroid.txt,inhaler puffs BD
+dosages,500mg tablet,01-prescription.txt,mg extraction
+dosages,50mcg tablet,05-prescription-asthma-thyroid.txt,mcg extraction
+dosages,1-0-1 after food,01-prescription.txt,schedule pattern
+dosages,0-0-1 at bedtime,01-prescription.txt,schedule pattern
+dosages,OD before food,05-prescription-asthma-thyroid.txt,OD pattern
+dosages,TDS / BD / SOS / HS,03-discharge-summary.txt + 05-file,all frequency codes app supports
+test_values,Hemoglobin 11.2 g/dL LOW,02-lab-report.txt,anemia flag
+test_values,WBC 11200 /uL HIGH,02-lab-report.txt,infection flag
+test_values,HbA1c 7.8 % HIGH,02-lab-report.txt,diabetes range
+test_values,Fasting Blood Sugar 142 mg/dL HIGH,02-lab-report.txt,diabetes range
+test_values,Total Cholesterol 228 mg/dL borderline,02-lab-report.txt,lipid flag (Borderline)
+test_values,LDL 148 mg/dL borderline,02-lab-report.txt,bad cholesterol (Borderline)
+test_values,HDL 38 mg/dL LOW,02-lab-report.txt,good cholesterol inverted
+test_values,Triglycerides 190 mg/dL borderline,02-lab-report.txt,lipid flag (Borderline)
+test_values,Creatinine 1.1 mg/dL normal,02-lab-report.txt,kidney
+test_values,TSH 8.2 uIU/mL HIGH,06-lab-report-thyroid-vitd.txt,thyroid
+test_values,Vitamin D 18 ng/mL LOW,06-lab-report-thyroid-vitd.txt,deficiency
+test_values,PPBS 178 mg/dL borderline,06-lab-report-thyroid-vitd.txt,post-meal sugar (Borderline)
+test_values,BP 140/90 mmHg HIGH,03-discharge-summary.txt,needs BP context
+test_values,BP 138/88 mmHg borderline,04-diagnostic-report.txt,ECG-time BP
+diagnoses,Type 2 Diabetes Mellitus E11,01-prescription.txt,ICD-10 E11 + SNOMED 44054006
+diagnoses,Essential Hypertension I10,01-prescription.txt,ICD-10 I10 + SNOMED 59621000
+diagnoses,Hyperlipidemia E78.5,02-lab-report.txt + 04-diagnostic-report.txt,dyslipidemia alias
+diagnoses,Anemia D64.9,02-lab-report.txt,low hemoglobin alias
+diagnoses,Acute viral febrile illness R50.9,03-discharge-summary.txt,fever alias
+diagnoses,Hypothyroidism E03.9,05 + 06 files,underactive thyroid alias
+diagnoses,Asthma J45,05-prescription-asthma-thyroid.txt,asthma
+diagnoses,Gastritis K29.7,05-prescription-asthma-thyroid.txt,GERD/acidity alias
+dates,12/03/2026 prescription date,01-prescription.txt,DD/MM/YYYY
+dates,10/03/2026 lab date,02-lab-report.txt,DD/MM/YYYY
+dates,02/02/2026 DOA + 05/02/2026 DOD,03-discharge-summary.txt,admission/discharge
+dates,18/03/2026 imaging date,04-diagnostic-report.txt,diagnostic date
+dates,15-Mar-2026 + 15-Apr-2026,05-prescription-asthma-thyroid.txt,DD-Mon-YYYY format
+dates,22-Mar-2026 + 22-Apr-2026,06-lab-report-thyroid-vitd.txt,DD-Mon-YYYY format

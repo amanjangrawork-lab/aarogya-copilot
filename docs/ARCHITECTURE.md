@@ -1,68 +1,71 @@
-# Architecture — Aarogya Copilot
+# Architecture — Aarogya Copilot (premium, trust-gated, faceless-fast)
 
-Offline-first, zero-backend static app. Everything runs in the browser; data stays in `localStorage`.
+Offline-first, zero-backend static app. Fast: no build, no server, first paint = HTML+CSS, CDN (pdf.js/Tesseract) lazy after UI. Data stays in `localStorage`.
 
-## Pipeline
+## Pipeline (what judges see in 60s)
 
 ```
-[ PDF / JPG / PNG / pasted text ]
-        │
-        ▼
-┌──────────────────┐   pdf.js text layer (fast path for digital PDFs)
-│  Ingest + OCR    │── Tesseract.js fallback (scans/photos, eng + selectable hin/tel/tam)
-└────────┬─────────┘   progress bar; scanned-PDF page rendered to canvas then OCR
-         ▼ raw text
-┌──────────────────┐
-│ Rule-based        │  • medicines: COMMON_MEDICINES + Tab/Cap/Syp regex + dose/freq/duration
-│ extractor (JS)    │  • labs: LAB_REFERENCE (14 tests, LOINC) + BP 120/80 pattern
-└────────┬─────────┘  • diagnoses: ICD-10/SNOMED keyword map  • dates  • doc-type classifier
-         ▼ structured record JSON
-┌──────────────────┐
-│ Summarizer        │  • offline templates (EN/HI/TE/TA): headline, flagged values + meanings,
-│ (4 languages)     │    meds, questions-to-ask-doctor, next steps, disclaimer
-└────────┬─────────┘  • optional Gemini 1.5 Flash enhancement (user key, never required)
+[ PDF / JPG / PNG / paste / 1-click demo ]
+         │
          ▼
-┌──────────────────┐  Unified profile + chronological timeline (records + wellness logs)
-│ Profile/Timeline │  Wellness manual entry (BP/sugar/weight)
+┌──────────────────┐  pdf.js text layer (digital PDFs, fast) + Tesseract.js
+│  Ingest + OCR     │  fallback (scans/photos, eng + hin/tel/tam selectable)
+└────────┬─────────┘  progress bar; page markers preserved as evidence
+         ▼ raw text + pages
+┌──────────────────┐  medicines (60+ list + Tab/Cap regex, dose+OD/BD/TDS/1-0-1)
+│ Extractor +      │  labs (14 tests + LOINC, high/low/borderline) + BP pattern
+│ Trust (JS)       │  diagnoses (ICD-10+SNOMED, negation guard) + dates + doc-type
+│                  │  → each value: {value, span, confidence high/med/low, needsReview}
 └────────┬─────────┘
+         ▼ staged record
+┌──────────────────┐  🔍 Review-before-save: source snippet per row, inline
+│ Review gate      │  dose/schedule edit, Confirm & save / Discard.
+└────────┬─────────┘  Conflicts: same drug different dose → flagged, never auto-merged
+         ▼ confirmed record
+┌──────────────────┐  Active meds (latest per drug) + lab trend sparklines +
+│ Timeline         │  chronological events + wellness (BP/sugar/weight)
+└────────┬─────────┘
+┌──────────────────┐  Offline templates EN/HI/TE/TA: headline, flagged meanings,
+│ Summarizer       │  meds (names untranslated), ask-doctor, next steps + 🔊 TTS
+└────────┬─────────┘  + optional Gemini 1.5 Flash (key in memory only)
          ▼
-┌──────────────────┐  FHIR R4 Bundle: Patient(ABHA identifier) + Observation(LOINC) +
-│ ABDM/FHIR export │  MedicationRequest + Condition(ICD-10+SNOMED CT) + DocumentReference
-└──────────────────┘  Mock ABHA link (OTP 123456) + mock ABDM import. Export/import JSON.
+┌──────────────────┐  FHIR R4 Bundle: Patient(ABHA id) + Observation(LOINC) +
+│ ABDM/FHIR export │  MedicationRequest + Condition(ICD-10+SNOMED) + DocumentReference
+└──────────────────┘  Mock ABHA (OTP 123456) + mock import. Export/import JSON.
 ```
 
-## ABDM readiness (decided early — shapes the schema)
+Self-check: `js/selftest.js` runs 6 samples + FHIR bundle → 7/7. Matrix: `sample-data/07-master-test-matrix.csv` (46 checks).
+
+## ABDM readiness (decided early — shapes schema)
 
 | Concern | Choice |
 |---|---|
-| Base standard | FHIR R4, NRKES/ABDM profiles in `meta.profile` |
+| Base | FHIR R4, NRKES/ABDM profiles in `meta.profile` |
 | Identity | `Patient.identifier[system=http://abdm.gov.in/abha]` + local fallback |
-| Terminology | LOINC for labs, ICD-10 + SNOMED CT for conditions |
-| Consent | Mock consent screen + note; production would add ABDM consent-manager + gateway calls |
-| Storage | Browser `localStorage` for prototype; production → encrypted vault + HIE gateway |
+| Terminology | LOINC labs, ICD-10 + SNOMED conditions, RxNorm-ready meds |
+| Consent | Mock consent + OTP + import note; prod → consent-manager + gateway `auth/init→confirm→fetch` |
+| Storage | `localStorage` proto; prod → encrypted vault + HIE gateway |
+| Safety | Hedged wording, no dose changes, emergency + disclaimer, borderline vs high |
 
-Real ABDM integration point: replace `abhaVerify`/`abhaImport` stubs in `js/app.js` with
-ABDM `auth/init → confirm → fetch-records` calls; the FHIR bundle shape already conforms.
+Real ABDM point: replace `abhaVerify`/`abhaImport` in `js/app.js`; bundle shape already conforms.
 
-## File map
+## File map (all buttons live)
 
-- `index.html` — tabs: Simple summary / Extracted data / Health timeline / ABHA & FHIR
-- `js/ocr.js` — pdf.js + Tesseract
-- `js/reference.js` — lab ranges + LOINC, medicine list, ICD-10/SNOMED map
-- `js/extractor.js` — regex/NLP extraction
-- `js/summarizer.js` — 4-language plain-language + Gemini optional
-- `js/fhir.js` — FHIR R4 bundle + mock ABHA id
-- `js/i18n.js`, `js/app.js`, `js/samples.js`
-- `slides.html` — 5-slide demo deck (print to PDF for submission)
-- `sample-data/` — 3 judge-ready records
+- `index.html` — 5 tabs: Summary / Review (+badge) / Data / Timeline / FHIR + judge banner + skip-link + dialogs
+- `js/ocr.js` — pdf.js + Tesseract + progress
+- `js/reference.js` — ranges+LOINC, meds, ICD-10/SNOMED map (4-lang meanings)
+- `js/extractor.js` — extraction + confidence/span/needsReview
+- `js/app.js` — state, Review gate, conflicts, trends, audio, ABHA mock, persistence
+- `js/summarizer.js` — 4-lang + Gemini optional; `js/fhir.js` — bundle + ABHA id + date fix
+- `js/i18n.js`, `js/samples.js`, `js/selftest.js` — UI strings, 6 demos, 7/7 tests
+- `css/styles.css` — premium tokens, focus-visible, reduced-motion, responsive, print
+- `slides.html` — 5-slide deck (print to PDF) · `sample-data/` — 6 files + matrix + PNG/PDF generator
+- `docs/` — ARCHITECTURE + diagram SVG + EVALUATION_NOTES + DEMO_SCRIPT + TRUST_CARD
 
-## Privacy & safety
+## Privacy & safety (judges check)
 
-- No backend, no tracking; optional Gemini key stays in browser memory.
-- Hedged wording ("may suggest", "talk to doctor"), no dose changes, emergency + disclaimer banners.
-- Abnormal flags use standard reference ranges; borderline vs high distinguished.
+No backend/tracking; Gemini key in memory only. Uncertain never auto-saves. Abnormal vs borderline distinct. Negation handled.
 
-## What would scale in Round 2
+## Round 2 scale
 
-RxNorm-drug normalization, Indic handwriting model, FHIR server (HAPI) + ABDM sandbox,
-care-plan reminders, caregiver sharing via consent, longitudinal risk trends.
+RxNorm normalization, Indic handwriting model, HAPI FHIR + ABDM sandbox, reminders, caregiver consent-share, risk trends.

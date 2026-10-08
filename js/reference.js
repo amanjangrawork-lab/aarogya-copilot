@@ -67,7 +67,7 @@ const COMMON_MEDICINES = [
   "atorvastatin","rosuvastatin","simvastatin",
   "aspirin","ecosprin","clopidogrel",
   "paracetamol","dolo","crocin","ibuprofen","diclofenac",
-  "azithromycin","amoxicillin","augmentin","cefixime","doxycycline","cough","levocetirizine","cetirizine","montelukast",
+  "azithromycin","amoxicillin","augmentin","cefixime","doxycycline","levocetirizine","cetirizine","montelukast",
   "omeprazole","pantoprazole","rabeprazole","domperidone",
   "thyroxine","eltroxin","thyronorm",
   "vitamin d","calcium","iron","folic acid","vitamin b12","zincovit","shelcal",

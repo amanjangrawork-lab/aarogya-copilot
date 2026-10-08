@@ -1,0 +1,16 @@
+ThyroCare Labs, Hyderabad  Date: 22-Mar-2026  Patient: Sunita Sharma 38/F
+Ref: Dr. Kavitha Nair
+Thyroid:
+TSH 8.2 uIU/mL (Ref 0.4-4.0) HIGH — suggests underactive thyroid
+Vitamin D (25-OH) 18 ng/mL (Ref 30-100) LOW — deficiency
+CBC:
+Hemoglobin 12.8 g/dL (Ref 12-16) normal
+WBC 8200 /uL (Ref 4000-11000) normal
+Platelets 245000 /uL (Ref 150000-450000) normal
+Sugar:
+Fasting Blood Sugar 96 mg/dL (Ref 70-100) normal
+PPBS 178 mg/dL (Ref 70-140) HIGH — impaired tolerance
+Creatinine 0.9 mg/dL (Ref 0.6-1.2) normal
+Vitals at collection: BP 118/76 mmHg, Weight 64 kg
+Impression: Hypothyroidism, Vitamin D deficiency, borderline high post-meal sugar. Advise physician review.
+Next test: 22-Apr-2026

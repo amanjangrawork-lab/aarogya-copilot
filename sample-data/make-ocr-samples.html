@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OCR Sample Pack Generator — Aarogya Copilot</title>
+<style>
+  body{font-family:Segoe UI,Arial,sans-serif;background:#0a2540;color:#fff;margin:0;padding:24px}
+  .wrap{max-width:900px;margin:auto}
+  .card{background:#fff;color:#111;border-radius:12px;padding:16px 20px;margin:12px 0}
+  .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+  button{background:#0a2540;color:#fff;border:0;border-radius:8px;padding:10px 16px;cursor:pointer;font-size:15px}
+  button.alt{background:#e8eef5;color:#0a2540}
+  .muted{color:#cbd5e1;font-size:14px}
+  code{background:#123;color:#fff;padding:2px 6px;border-radius:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>⬇ OCR Sample Pack Generator</h1>
+  <p class="muted">Fully offline. Generates the same text as the <code>sample-data/*.txt</code> files as
+  <b>PNG images</b> (tests the Tesseract.js OCR path) and <b>text PDFs</b> (tests the pdf.js path).
+  Then drag the downloads onto <code>index.html</code>'s drop zone to check extraction.</p>
+  <div class="row">
+    <button id="allPng">⬇ Download all PNG (OCR test)</button>
+    <button id="allPdf">⬇ Download all PDF (text-layer test)</button>
+  </div>
+  <div id="list"></div>
+  <p class="muted">Expected results per file are in <code>sample-data/07-master-test-matrix.csv</code>.
+  Synthetic data only — no real patient info.</p>
+</div>
+<script>
+const SAMPLES = [
+{name:"01-prescription", title:"Prescription — Diabetes + BP", text:`CityCare Clinic, Hyderabad — Dr. Anitha Rao, MD
+Date: 12/03/2026  Patient: Ramesh Kumar, 52y M
+Diagnosis: Type 2 Diabetes Mellitus, Essential Hypertension
+Rx:
+1. Tab. Metformin 500mg — 1-0-1 after food x 30 days
+2. Tab. Glimepiride 1mg — 1-0-0 before breakfast x 30 days
+3. Tab. Amlodipine 5mg — 0-0-1 at bedtime x 30 days
+4. Tab. Atorvastatin 10mg — 0-0-1 HS x 30 days
+Advice: Low salt, low sugar diet, 30 min walk daily. Review after 1 month with FBS, PPBS, HbA1c.
+Next visit: 12/04/2026`},
+{name:"02-lab-report", title:"Lab Report — CBC + HbA1c + Lipid", text:`Apollo Diagnostics, Hyderabad  Date: 10/03/2026  Patient: Ramesh Kumar 52/M
+CBC:
+Hemoglobin 11.2 g/dL (Ref 13-17) LOW
+WBC 11200 /uL (Ref 4000-11000) HIGH
+Platelets 165000 /uL (Ref 150000-450000)
+HbA1c 7.8 % (Ref <5.7 normal; 5.7-6.4 prediabetes; >=6.5 diabetes) HIGH
+Fasting Blood Sugar 142 mg/dL (Ref 70-100) HIGH
+Total Cholesterol 228 mg/dL (Ref <200) HIGH
+LDL 148 mg/dL (Ref <100) HIGH
+HDL 38 mg/dL (Ref >40) LOW
+Triglycerides 190 mg/dL (Ref <150) HIGH
+Creatinine 1.1 mg/dL (Ref 0.6-1.2) normal
+Impression: Poor glycemic control, dyslipidemia, mild anemia. Advise physician review.`},
+{name:"03-discharge-summary", title:"Discharge Summary — Viral Fever", text:`Sunshine Hospital, Secunderabad — Discharge Summary
+Patient: Ramesh Kumar, 52M  DOA: 02/02/2026  DOD: 05/02/2026
+Diagnosis: Acute viral febrile illness, Hypertension, Type 2 Diabetes Mellitus
+Course: Presented with fever 102F, body ache x 3 days. Dengue NS1 negative.
+Managed with Paracetamol 650mg TDS, IV fluids, Ondansetron 4mg SOS.
+Sugar monitored, BP 140/90 on admission, settled to 128/82.
+Discharge meds: Tab Paracetamol 650mg SOS, Tab Pantoprazole 40mg OD x 5 days,
+continue Metformin, Amlodipine.
+Advice: Rest 5 days, fluids, soft diet, monitor temperature/BP/sugar,
+review in OPD after 7 days or earlier if breathlessness/chest pain.`},
+{name:"04-diagnostic-report", title:"Diagnostic Report — X-ray + ECG + USG", text:`City Imaging Centre, Hyderabad — Diagnostic Report
+Date: 18/03/2026  Patient: Ramesh Kumar, 52y M  Ref: Dr. Anitha Rao
+1. CHEST X-RAY (PA view)
+Finding: Lungs clear, no consolidation. Cardiac silhouette normal.
+Impression: Normal chest X-ray. No acute abnormality.
+2. ECG (12-lead, 18/03/2026)
+Finding: Normal sinus rhythm, HR 78 bpm. PR/QRS/QT normal. ST-T no acute change.
+BP at time of ECG: 138/88 mmHg
+Impression: Normal ECG. Borderline high BP — correlate clinically.
+3. ULTRASOUND ABDOMEN (USG)
+Liver: Normal size, mild fatty change (Grade I). Gall bladder normal.
+Kidneys: Both normal in size, no stone.
+Impression: Mild fatty liver. Advise lipid control, review with Total Cholesterol 228, Triglycerides 190 reports dated 10/03/2026.
+Diagnosis: Essential Hypertension, Hyperlipidemia (Dyslipidemia)
+Advice: Continue Amlodipine 5mg OD, Atorvastatin 10mg OD. Cardiology review if chest pain/breathlessness.
+Next review: 25/03/2026`},
+{name:"05-prescription-asthma-thyroid", title:"Prescription — Asthma + Thyroid", text:`SmileCare Clinic, Secunderabad — Dr. Kavitha Nair, MD
+Date: 15-Mar-2026  Patient: Sunita Sharma, 38y F
+Diagnosis: Hypothyroidism, Bronchial Asthma, Gastritis / GERD
+Rx:
+1. Tab. Thyroxine 50mcg — 1-0-0 OD before breakfast x 30 days
+2. Tab. Montelukast 10mg — 0-0-1 HS x 30 days
+3. Tab. Pantoprazole 40mg — 1-0-0 OD before food x 14 days
+4. Tab. Levocetirizine 5mg — 0-0-1 SOS for cold/cough x 10 days
+5. Inhaler Foracort 200mcg — 2 puffs BD x 30 days
+Advice: Take Thyroxine empty stomach with water. Avoid dust/cold. Warm fluids.
+Investigations advised: TSH retest on 22-Mar-2026.
+Next visit: 15-Apr-2026`},
+{name:"06-lab-report-thyroid-vitd", title:"Lab Report — Thyroid + Vitamin D", text:`ThyroCare Labs, Hyderabad  Date: 22-Mar-2026  Patient: Sunita Sharma 38/F
+Ref: Dr. Kavitha Nair
+Thyroid:
+TSH 8.2 uIU/mL (Ref 0.4-4.0) HIGH — suggests underactive thyroid
+Vitamin D (25-OH) 18 ng/mL (Ref 30-100) LOW — deficiency
+CBC:
+Hemoglobin 12.8 g/dL (Ref 12-16) normal
+WBC 8200 /uL (Ref 4000-11000) normal
+Platelets 245000 /uL (Ref 150000-450000) normal
+Sugar:
+Fasting Blood Sugar 96 mg/dL (Ref 70-100) normal
+PPBS 178 mg/dL (Ref 70-140) HIGH — impaired tolerance
+Creatinine 0.9 mg/dL (Ref 0.6-1.2) normal
+Vitals at collection: BP 118/76 mmHg, Weight 64 kg
+Impression: Hypothyroidism, Vitamin D deficiency, borderline high post-meal sugar. Advise physician review.
+Next test: 22-Apr-2026`},
+];
+
+/* ---------- PNG via canvas (raster → Tesseract path) ---------- */
+function wrapCtx(ctx, text, maxW){
+  const out = [];
+  for (const para of text.split("\n")){
+    const words = para.split(/\s+/);
+    let line = "";
+    for (const w of words){
+      const t = line ? line + " " + w : w;
+      if (ctx.measureText(t).width > maxW && line){ out.push(line); line = w; }
+      else line = t;
+    }
+    out.push(line);
+  }
+  return out;
+}
+function downloadPng(s){
+  const W = 1600, FS = 30, LH = FS + 14;
+  const c = document.createElement("canvas");
+  const m = c.getContext("2d");
+  m.font = FS + "px Arial";
+  const lines = wrapCtx(m, s.text, W - 100);
+  const H = 220 + lines.length * LH + 100;
+  c.width = W; c.height = H;
+  const x = c.getContext("2d");
+  x.fillStyle = "#fff"; x.fillRect(0,0,W,H);
+  x.fillStyle = "#0a2540"; x.fillRect(0,0,W,130);
+  x.fillStyle = "#fff"; x.font = "bold 36px Arial";
+  x.fillText(s.title, 50, 55);
+  x.fillStyle = "#cbd5e1"; x.font = "24px Arial";
+  x.fillText("Synthetic sample for OCR testing - Aarogya Copilot", 50, 95);
+  x.fillStyle = "#000"; x.font = FS + "px Arial";
+  let y = 185;
+  for (const ln of lines){ x.fillText(ln, 50, y); y += LH; }
+  x.fillStyle = "#888"; x.font = "22px Arial";
+  x.fillText("Educational sample only - not real patient data.", 50, H - 40);
+  c.toBlob(b => {
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(b);
+    a.download = s.name + ".png"; a.click();
+    setTimeout(()=>URL.revokeObjectURL(a.href), 5000);
+  }, "image/png");
+}
+
+/* ---------- Minimal text-layer PDF (pdf.js path), no libraries ---------- */
+function pdfEsc(t){
+  return t.replace(/\\/g,"\\\\").replace(/\(/g,"\\(").replace(/\)/g,"\\)");
+}
+function wrapChars(text, n){
+  const out = [];
+  for (const para of text.split("\n")){
+    let rest = para;
+    while (rest.length > n){
+      let cut = rest.lastIndexOf(" ", n);
+      if (cut < 20) cut = n;
+      out.push(rest.slice(0, cut)); rest = rest.slice(cut + 1);
+    }
+    out.push(rest);
+  }
+  return out;
+}
+function downloadPdf(s){
+  const ascii = t => t.replace(/[—–]/g,"-").replace(/≥/g,">=").replace(/≤/g,"<=").replace(/µ/g,"u");
+  const lines = wrapChars(ascii(s.title) + "\n" + "-".repeat(60) + "\n" + ascii(s.text), 92);
+  lines.push("", "Educational sample only - not real patient data.");
+  let stream = "BT /F1 11 Tf 50 780 Td 14 TL ";
+  for (const ln of lines) stream += "(" + pdfEsc(ln) + ") Tj T* ";
+  stream += "ET";
+  const objs = [
+    "<< /Type /Catalog /Pages 2 0 R >>",
+    "<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
+    "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>",
+    "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>",
+    "<< /Length " + new TextEncoder().encode(stream).length + " >>\nstream\n" + stream + "\nendstream",
+  ];
+  let pdf = "%PDF-1.4\n", offsets = [];
+  const enc = new TextEncoder();
+  const bytes = s2 => enc.encode(s2).length;
+  for (let i = 0; i < objs.length; i++){
+    offsets.push(bytes(pdf));
+    pdf += (i+1) + " 0 obj\n" + objs[i] + "\nendobj\n";
+  }
+  const xrefPos = bytes(pdf);
+  pdf += "xref\n0 " + (objs.length+1) + "\n0000000000 65535 f \n";
+  for (const o of offsets) pdf += String(o).padStart(10,"0") + " 00000 n \n";
+  pdf += "trailer\n<< /Size " + (objs.length+1) + " /Root 1 0 R >>\nstartxref\n" + xrefPos + "\n%%EOF";
+  const blob = new Blob([enc.encode(pdf)], {type:"application/pdf"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = s.name + ".pdf"; a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 5000);
+}
+
+/* ---------- UI ---------- */
+const list = document.getElementById("list");
+for (const s of SAMPLES){
+  const d = document.createElement("div");
+  d.className = "card";
+  d.innerHTML = "<b>" + s.title + "</b> <span style='color:#666'>(" + s.name + ".txt)</span>";
+  const r = document.createElement("div"); r.className = "row";
+  const b1 = document.createElement("button"); b1.className = "alt"; b1.textContent = "PNG";
+  b1.onclick = () => downloadPng(s);
+  const b2 = document.createElement("button"); b2.className = "alt"; b2.textContent = "PDF";
+  b2.onclick = () => downloadPdf(s);
+  r.appendChild(b1); r.appendChild(b2); d.appendChild(r); list.appendChild(d);
+}
+document.getElementById("allPng").onclick = () => {
+  SAMPLES.forEach((s,i)=>setTimeout(()=>downloadPng(s), i*700));
+};
+document.getElementById("allPdf").onclick = () => {
+  SAMPLES.forEach((s,i)=>setTimeout(()=>downloadPdf(s), i*700));
+};
+</script>
+</body>
+</html>

@@ -1,55 +1,65 @@
 # 🩺 Aarogya Copilot — AI-Powered Personal Health Copilot
 
-Upload prescriptions, lab reports & discharge summaries → **OCR → structured extraction → plain-language summary (EN/HI/TE/TA) → unified timeline → ABDM-ready FHIR bundle with mock ABHA.**
+> **Judge in 60 seconds, no help needed.** Open the live URL → click 🧪 Lab report → 🔍 Review → Confirm & save → Simple summary → हिन्दी → Timeline (trends) → ABHA & FHIR → Export. Click ✅ Run self-check for 7/7 proof. No login, no key, works offline.
 
-Built for the **Altrix Labs — AI-Powered Personal Health Copilot** hackathon (Round 1).
+**What:** Caregiver uploads messy prescriptions, labs, discharge summaries → trustworthy health timeline + plain-language explanation.
+**Why:** Records are fragmented across paper, WhatsApp PDFs, labs. Caregiver job: “What changed, what meds are active, what to carry to doctor?”
+**How:** Upload → Classify → OCR → Extract with confidence + source span → **Human Review-before-save** → Active meds + lab trends + dose-change flags → Explain EN/HI/TE/TA → FHIR export + mock ABHA.
+**Tech:** Zero-backend static web app (HTML/CSS/JS, no build, fast). pdf.js + Tesseract.js (eng+hin/tel/tam), localStorage, optional Gemini 1.5 Flash. FHIR R4 + LOINC + ICD-10 + SNOMED CT, ABDM NRKES profiles.
+**Data:** 6 synthetic samples only, no real patients. `sample-data/07-master-test-matrix.csv` = 46 checks. Self-check 7/7 offline.
+**Value:** Fewer repeat tests, safer adherence, calmer doctor visits, regional access. Wedge: visible uncertainty + provenance + reconciliation, not generic chat.
 
-**🔴 Live demo:** `https://amanjangrawork-lab.github.io/aarogya-copilot/` · **Repo:** `https://github.com/amanjangrawork-lab/aarogya-copilot`
+Built for **Altrix Labs — AI-Powered Personal Health Copilot** Round 1.
 
-## ✨ What works (all offline, zero backend)
+## ✨ Everything works — no dead buttons
 
-- **Ingest + OCR**: PDF (pdf.js text layer) + photos/scans (Tesseract.js `eng` + selectable `hin`/`tel`/`tam`) + paste-text; scanned-PDF auto-render → OCR
-- **Extraction**: medicines + dosages + schedules, 14 lab tests with LOINC + high/low/borderline flags, diagnoses (ICD-10 + SNOMED CT), dates, doctor/facility, doc-type
-- **Simple summary**: headline, "what this abnormal value means", meds explained, questions-to-ask-doctor, next steps — in **English, हिन्दी, తెలుగు, தமிழ்** + optional Gemini 1.5 Flash enhancement (key optional)
-- **Timeline + profile**: records + wellness logs (BP/sugar/weight) in one chronological view, localStorage persistence
-- **ABDM-ready**: FHIR R4 Bundle (Patient+ABHA id, Observation/LOINC, MedicationRequest, Condition/ICD-10+SNOMED, DocumentReference), mock ABHA link (OTP `123456`), mock ABDM import, export/import JSON
-- **Safety**: educational-only disclaimers, hedged wording, no dose-change advice, emergency banner
+- **Add record:** drag PDF/JPG/PNG (progress bar) / paste text + Analyze / 6 one-click demos (💊🧪🏥🩻 + Rx-2/Lab-2)
+- **🔍 Review (trust gate):** low-confidence meds yellow-flagged with source snippet, editable dose/schedule, Confirm & save / Discard. Dose-changed vs earlier flagged. Nothing auto-saves uncertain.
+- **Simple summary:** headline, flagged labs with “what it means”, meds (names never translated), questions-to-ask-doctor, next steps, disclaimer + 🔊 Listen (en/hi/te/ta voices)
+- **Extracted data:** tables + Delete + Original OCR text expandable (provenance)
+- **Timeline:** active meds (latest per drug) + lab trend sparklines (rising/falling) + chronological events + wellness logs
+- **ABHA & FHIR:** mock Link ABHA (OTP `123456`), Simulate ABDM import, Export/Import FHIR JSON, resource counts + codes visible
+- **Side tools:** Setup profile, Log BP/sugar/weight, ✅ Run self-check, 🗑️ Clear, ⚙️ Settings (Gemini key optional + OCR lang), 🖨️ Print clean summary
+- **Safety:** educational-only, hedged wording, no dose advice, emergency 108/112 banner always on top, negation guard (e.g. “dengue negative” not counted)
 
-## 🚀 Run (30 seconds)
-
-No install. Either:
+## 🚀 Start fast (30 sec)
 
 ```bash
-# any static server
 python -m http.server 8000
 # → http://localhost:8000
 ```
 
-or just double-click `index.html` (CDNs need internet for pdf.js/Tesseract; everything else is local).
+Or double-click `index.html`. Demos + paste-text + summaries work offline. PDF/OCR need internet once for CDN (pdf.js/Tesseract). Data stays in your browser.
 
-**Judge path (60s):** click 🧪 Lab report → read summary → switch to हिन्दी → Timeline → ABHA & FHIR → Export JSON.
+## 🧪 Test data (synthetic, safe)
 
-## 🧪 Test data
-
-- `sample-data/01-prescription.txt`, `02-lab-report.txt`, `03-discharge-summary.txt`
-- In-app 1-click demo buttons load the same content
+- `01-prescription.txt` — 4 meds, T2DM + HTN, 12/03/2026
+- `02-lab-report.txt` — 10 labs (HbA1c 7.8 ▲, LDL 148, Hb 11.2 ▼…), 10/03/2026
+- `03-discharge-summary.txt` — 5 meds TDS/SOS/OD, BP 140/90, DOA/DOD
+- `04-diagnostic-report.txt` — X-ray+ECG+USG, BP 138/88
+- `05-prescription-asthma-thyroid.txt` — 5 meds incl 50mcg + inhaler
+- `06-lab-report-thyroid-vitd.txt` — TSH 8.2 ▲, Vit-D 18 ▼
+- `07-master-test-matrix.csv` — 46 expected checks
+- `make-ocr-samples.html` — 1-click PNG (Tesseract path) + PDF (pdf.js path) generator
+- In-app demos load the same content instantly
 
 ## 🏗️ Architecture
 
-See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) + [`docs/architecture.svg`](docs/architecture.svg).
-Pipeline: ingest → OCR → rule extractor → 4-language summarizer (+Gemini) → profile/timeline → FHIR/ABHA.
-Zero backend; swap the two `abha*` stubs in `js/app.js` for real ABDM gateway calls in production.
+See `docs/ARCHITECTURE.md` + `docs/architecture.svg` + `docs/TRUST_CARD.md`.
+Pipeline: ingest → OCR → rule extractor (confidence+span) → Review gate → trends/active-meds → 4-lang summarizer (+Gemini) → timeline → FHIR/ABHA mock. Zero backend; swap `abha*` stubs in `js/app.js` for real ABDM gateway in prod.
 
-## 🌐 Deploy (free, 2 min) — for the "Live application URL" field
+## 🌐 Deploy — Live URL field
 
-**GitHub Pages (recommended):** push this folder → repo Settings → Pages → Deploy from branch → `main` `/root` → URL `https://<you>.github.io/<repo>/`.
-**Vercel/Netlify:** import the repo, no build command, output dir `.`.
+**GitHub Pages:** push folder → Settings → Pages → Deploy from branch → `main` `/root` → `https://<you>.github.io/<repo>/`.
+**Vercel/Netlify:** import repo, no build, output `.`. Verify: Lab demo → Review → Hindi → Timeline → Export.
 
-## 📽️ Demo
+## 📽️ Demo + evaluation
 
-- `slides.html` — 5-slide deck (open + print to PDF for submission)
-- `docs/DEMO_SCRIPT.md` — 3-min script · `docs/EVALUATION_NOTES.md` — judge test guide
+- `slides.html` — 5 slides (print to PDF backup)
+- `docs/DEMO_SCRIPT.md` — 3-min script with Review + trends
+- `docs/EVALUATION_NOTES.md` — 60-sec + 5-min judge guide
+- `docs/TRUST_CARD.md` — 1-page metrics (accuracy, zero unsafe auto-fill, grounding, privacy)
 
 ## ⚠️ Disclaimer
 
-Educational summaries only — not medical advice, not a diagnosis. Always consult a registered medical practitioner.
+Educational summaries only — not medical advice, not diagnosis. Always consult a registered medical practitioner. In emergency call 108/112.
