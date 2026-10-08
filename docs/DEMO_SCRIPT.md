@@ -6,9 +6,9 @@
 
 **1:00 Review + Summary (50s).** Simple summary tab: headline, 🔴/⚠️/✅ flags, “what HbA1c 7.8% means”, meds with ✅ confirmed, questions-to-ask-doctor. Click **🔊 Listen**. Switch to **हिन्दी** — “same meaning, drug names unchanged.” Point to disclaimer + safe wording.
 
-**1:50 Timeline + Trends (30s).** Load Prescription + Discharge demos, add wellness log (BP 128/82). Show **active meds (latest per drug)** + **HbA1c trend sparkline rising** + dose-changed flag: “carry both, don’t adjust yourself.”
+**1:50 Timeline + Trends (30s).** Load Prescription + Discharge demos (dose-change resolver appears — pick Keep new), add wellness log (BP 128/82). Show search + Meds filter, **active meds**, **HbA1c trend sparkline**, provenance ledger in Data tab.
 
-**2:20 ABDM/FHIR + Trust (30s).** ABHA & FHIR tab: Link ABHA OTP `123456`, Export FHIR JSON (Patient/Observation LOINC/Condition ICD-10+SNOMED), Simulate import. Click **✅ Run self-check → 7/7**. “Zero backend, data in browser, deploys free.”
+**2:20 ABDM/FHIR + Trust (30s).** ABHA & FHIR tab: ✅ R4 valid badge, Link ABHA OTP `123456`, Export FHIR JSON (Patient/Observation LOINC/Condition ICD-10+SNOMED), 7-day share → Revoke. Click **✅ Run self-check → 11/11**. “Zero backend, installable PWA, data in browser, deploys free.”
 
 **2:50 Close (10s).** “Trust-gated copilot: visible uncertainty, provenance, reconciliation, 4 languages. ABDM-ready today, gateway-ready tomorrow.” Show slides link.
 

@@ -4,23 +4,26 @@ Open the **live URL** (or double-click `index.html`). Fast static app, demos wor
 
 ## 60-second test (must-pass)
 1. Click **🧪 Lab report** → auto-goes to **🔍 Review**: see 10 labs with source snippets + confidence. Click **Confirm & save**.
-2. Read **Simple summary**: headline + flagged values (HbA1c 7.8% ▲, Hb 11.2 ▼, LDL 148…) + plain meanings + meds + doctor questions. Click **🔊 Listen**.
+2. Read **Simple summary**: headline + flagged values (HbA1c 7.8% ▲, Hb 11.2 ▼, LDL 148…) + plain meanings + meds + doctor questions. Click **🔊 Listen**. Press **🖨️** anytime for the one-page doctor visit sheet.
 3. Switch to **हिन्दी** (top-right) — UI + summary translate, drug names stay English.
-4. Open **Health timeline** — active meds + HbA1c trend sparkline + chronological events.
-5. Open **ABHA & FHIR** → **Export FHIR JSON** (Patient+Observation LOINC+MedicationRequest+Condition ICD-10/SNOMED).
-6. Click **✅ Run self-check** (sidebar) — expect 7/7.
+4. Open **Health timeline** — search “metformin”, try Meds/Labs filters — active meds + HbA1c trend sparkline + chronological events.
+5. Open **Extracted data** → scroll to **📜 Provenance ledger** (every value → doc, span, confidence, status).
+6. Open **ABHA & FHIR** → see **✅ FHIR R4 valid** badge → **Export FHIR JSON** → **Create 7-day share link** → Revoke it.
+7. Click **✅ Run self-check** (sidebar) — expect 11/11.
 
 ## Full test (5 min, every button)
-- **Upload:** drag PDF/JPG/PNG → progress bar → Review gate. Or paste text + Analyze. Files in `sample-data/`.
-- **Review gate:** yellow = low confidence, edit dose/schedule inline, Confirm saves to timeline, Discard saves nothing. Try Rx-2 for generic-pattern low flag.
-- **Conflict:** load Prescription then Discharge — dose-changed banner appears, advises carry both, never auto-adjusts.
-- **OCR lang:** ⚙️ → +Hindi/Telugu/Tamil before PNG drop. PDFs use fast pdf.js path.
+- **Upload:** drag PDF/JPG/PNG → progress bar → Review gate (files over 10 MB get a plain-language error). Multi-page scanned PDFs OCR every page. Or paste text + Analyze. Files in `sample-data/`.
+- **Review gate:** yellow = low confidence, edit dose/schedule inline, dose-change offers Keep new / Keep earlier, Confirm saves to timeline, Discard saves nothing. Try Rx-2 for generic-pattern low flag.
+- **Conflict:** load Prescription then Discharge — dose-changed banner appears with resolver; your choice is logged on the record.
+- **Timeline:** search + All/Meds/Labs/Visits/Wellness filters; trends across records; empty-search guidance.
+- **Ledger:** Extracted data → 📜 Provenance ledger.
+- **OCR lang:** ⚙️ → +Hindi/Telugu/Tamil before PNG drop. PDFs use fast pdf.js path. Fully offline? Demos + paste always work; a clear in-app note says so.
 - **Gemini (optional):** ⚙️ paste key → summary → Enhance. Offline always works without it.
 - **ABHA mock:** Link ABHA → 10-digit → Send OTP → `123456` → Verify → Simulate ABDM import adds 1 record.
-- **FHIR:** check counts + LOINC/ICD-10/SNOMED, Export then Import back via Import button.
-- **Wellness:** Log BP/sugar/weight → appears in timeline + trends.
-- **Profile/Print:** Setup profile → stats update. 🖨️ prints clean doctor summary (nav hidden).
-- **Delete/Clear:** per-record Delete in Extracted data, 🗑️ clears all (with confirm).
+- **FHIR:** ✅ validity badge + resource counts + LOINC/ICD-10/SNOMED codes, Export then Import back, 7-day share → Copy → Revoke.
+- **Wellness:** Log BP/sugar/weight → appears in timeline + trends. 🔔 reminder nudges when today's log is missing (on-device only).
+- **Profile/Print:** Setup profile → stats update. 🖨️ prints the one-page doctor visit sheet (nav hidden, summary forced visible).
+- **Delete/Clear:** per-record Delete in Extracted data, 🗑️ clears all (with confirm). PWA: install from browser menu, works offline after first visit.
 
 ## Scoring map (where to look)
 - **AI 35%:** OCR progress + extraction counts + Review provenance + abnormal meanings. Lab sample = 10 labs, Prescription = 4 meds exact.

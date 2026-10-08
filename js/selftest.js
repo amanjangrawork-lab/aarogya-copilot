@@ -28,5 +28,24 @@ function runSelfCheck() {
     const hasObs = bundle.entry.some(e => e.resource.resourceType === "Observation");
     results.push({ id: "fhir-bundle", pass: hasPatient && hasObs, entry: bundle.entry.length });
   } catch (err) { results.push({ id: "fhir-bundle", pass: false, error: String(err && err.message || err) }); }
+  // Edge cases: negation, frequencies, date formats, unit-missing confidence
+  try {
+    const neg = extractRecord("Patient has fever. Dengue NS1 negative. No diabetes.", "edge-negation.txt");
+    results.push({ id: "edge-negation", pass: !neg.diagnoses.some(d => /dengue/i.test(d.display)) });
+  } catch (err) { results.push({ id: "edge-negation", pass: false }); }
+  try {
+    const fr = extractRecord("Tab. Metformin 500mg — 0-0-1 HS x 5 days. Tab. Amlodipine 5mg SOS.", "edge-freq.txt");
+    const f = fr.medicines.map(m => m.frequency).join("|");
+    results.push({ id: "edge-freq", pass: /0-0-1/.test(f) && /SOS/i.test(f) && fr.medicines.every(m => m.confidence === "high") });
+  } catch (err) { results.push({ id: "edge-freq", pass: false }); }
+  try {
+    const dt = extractRecord("Visit 15-Mar-2026, review 12/04/2026.", "edge-dates.txt");
+    results.push({ id: "edge-dates", pass: dt.dates.length >= 2 });
+  } catch (err) { results.push({ id: "edge-dates", pass: false }); }
+  try {
+    const um = extractRecord("Hemoglobin 11.2, WBC normal.", "edge-unit.txt");
+    const hb = um.labs.find(l => l.key === "hemoglobin");
+    results.push({ id: "edge-unit-conf", pass: !!hb && hb.confidence !== "high" && hb.needsReview === true });
+  } catch (err) { results.push({ id: "edge-unit-conf", pass: false }); }
   return results;
 }

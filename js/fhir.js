@@ -93,10 +93,37 @@ function buildFhirBundle(profile, records) {
       resourceType: "DocumentReference", id: "doc-" + i,
       status: "current", type: { text: rec.docType },
       subject: { reference: "Patient/" + pid },
-      date: new Date().toISOString(),
+      date: isoDate,
       description: rec.fileName,
       content: [{ attachment: { contentType: "text/plain", data: btoa(unescape(encodeURIComponent(rec.text.slice(0, 60000)))) } }],
     }});
   });
   return bundle;
+}
+
+/* Lightweight FHIR R4 validity check for the in-app badge (fhir-developer skill rules:
+   required fields = cardinality 1..x; enums validated; OperationOutcome-style gap list). */
+function validateFhirBundle(bundle) {
+  const gaps = [];
+  const entries = (bundle && bundle.entry) || [];
+  const patients = entries.filter(e => e.resource && e.resource.resourceType === "Patient");
+  if (!patients.length) gaps.push("Missing Patient resource");
+  else if (!((patients[0].resource.identifier || []).length)) gaps.push("Patient.identifier (ABHA) missing");
+  entries.forEach((e, i) => {
+    const r = e.resource || {};
+    const where = `${r.resourceType || "?"}[${i}]`;
+    if (r.resourceType === "Observation") {
+      if (!r.status) gaps.push(`${where}: status required`);
+      if (!r.code) gaps.push(`${where}: code required`);
+    }
+    if (r.resourceType === "MedicationRequest") {
+      if (!r.status) gaps.push(`${where}: status required`);
+      if (!r.intent) gaps.push(`${where}: intent required`);
+      if (!r.medicationCodeableConcept && !r.medicationReference) gaps.push(`${where}: medication[x] required`);
+      if (!r.subject) gaps.push(`${where}: subject required`);
+    }
+    if (r.resourceType === "Condition" && !r.subject) gaps.push(`${where}: subject required`);
+    if (r.resourceType === "Bundle") gaps.push(`${where}: nested Bundle not expected`);
+  });
+  return { valid: gaps.length === 0, gaps: gaps.slice(0, 8), count: entries.length };
 }

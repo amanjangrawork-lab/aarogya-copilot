@@ -19,22 +19,22 @@ Offline-first, zero-backend static app. Fast: no build, no server, first paint =
 └────────┬─────────┘
          ▼ staged record
 ┌──────────────────┐  🔍 Review-before-save: source snippet per row, inline
-│ Review gate      │  dose/schedule edit, Confirm & save / Discard.
-└────────┬─────────┘  Conflicts: same drug different dose → flagged, never auto-merged
+│ Review gate      │  dose/schedule edit, Keep new / Keep earlier resolver,
+└────────┬─────────┘  Confirm & save / Discard. Choice logged on record.
          ▼ confirmed record
 ┌──────────────────┐  Active meds (latest per drug) + lab trend sparklines +
-│ Timeline         │  chronological events + wellness (BP/sugar/weight)
+│ Timeline         │  search/filters + chronological events + wellness + reminders
 └────────┬─────────┘
 ┌──────────────────┐  Offline templates EN/HI/TE/TA: headline, flagged meanings,
 │ Summarizer       │  meds (names untranslated), ask-doctor, next steps + 🔊 TTS
 └────────┬─────────┘  + optional Gemini 1.5 Flash (key in memory only)
          ▼
-┌──────────────────┐  FHIR R4 Bundle: Patient(ABHA id) + Observation(LOINC) +
-│ ABDM/FHIR export │  MedicationRequest + Condition(ICD-10+SNOMED) + DocumentReference
-└──────────────────┘  Mock ABHA (OTP 123456) + mock import. Export/import JSON.
+┌──────────────────┐  FHIR R4 Bundle (+validity badge): Patient(ABHA id) +
+│ ABDM/FHIR export │  Observation(LOINC) + MedicationRequest + Condition(ICD-10+SNOMED)
+└──────────────────┘  + DocumentReference. Mock ABHA (OTP 123456) + mock import + 7-day revocable share. Export/import JSON. PWA shell cached offline.
 ```
 
-Self-check: `js/selftest.js` runs 6 samples + FHIR bundle → 7/7. Matrix: `sample-data/07-master-test-matrix.csv` (46 checks).
+Self-check: `js/selftest.js` → 11/11 (6 samples + FHIR bundle + 4 edge cases: negation, frequencies, dates, unit-confidence). Matrix: `sample-data/07-master-test-matrix.csv` (46 checks).
 
 ## ABDM readiness (decided early — shapes schema)
 
@@ -57,7 +57,7 @@ Real ABDM point: replace `abhaVerify`/`abhaImport` in `js/app.js`; bundle shape 
 - `js/extractor.js` — extraction + confidence/span/needsReview
 - `js/app.js` — state, Review gate, conflicts, trends, audio, ABHA mock, persistence
 - `js/summarizer.js` — 4-lang + Gemini optional; `js/fhir.js` — bundle + ABHA id + date fix
-- `js/i18n.js`, `js/samples.js`, `js/selftest.js` — UI strings, 6 demos, 7/7 tests
+- `js/i18n.js`, `js/samples.js`, `js/selftest.js` — UI strings, 6 demos, 11/11 tests (incl. edge cases)
 - `css/styles.css` — premium tokens, focus-visible, reduced-motion, responsive, print
 - `slides.html` — 5-slide deck (print to PDF) · `sample-data/` — 6 files + matrix + PNG/PDF generator
 - `docs/` — ARCHITECTURE + diagram SVG + EVALUATION_NOTES + DEMO_SCRIPT + TRUST_CARD

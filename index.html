@@ -7,6 +7,10 @@
 <meta name="description" content="AI-powered Personal Health Copilot: OCR + extraction + plain-language summaries + timeline + ABDM/FHIR-ready. Built for Altrix Labs challenge.">
 <meta name="theme-color" content="#0a2540">
 <meta name="color-scheme" content="light">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
 <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
@@ -15,8 +19,8 @@
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700;800&display=swap">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700;800&display=swap">
 <link rel="stylesheet" href="css/styles.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 </head>
 <body>
 <a class="skip" href="#mainCol">Skip to main content</a>
@@ -41,6 +45,7 @@
     <div class="card">
       <button class="btn full" id="profileBtn">👤 Setup profile</button>
       <button class="btn full" id="wellBtn" data-i18n="addWellness">Log BP / sugar / weight</button>
+      <button class="btn full" id="remindBtn">🔔 Daily log reminder: off</button>
       <button class="btn full" id="selfBtn">✅ Run self-check (offline test)</button>
       <button class="btn full ghost" id="clearBtn">🗑️ Clear demo data</button>
       <p class="muted small" data-i18n="disclaimer">Educational only — not medical advice. Always consult your doctor.</p>
@@ -96,6 +101,16 @@
     <div id="tab-data" class="card" hidden><div id="dataBox"></div></div>
     <div id="tab-timeline" class="card" hidden>
       <div class="row"><h3 style="margin:0">Unified timeline</h3><button class="btn small" id="abhaImport2" onclick="document.getElementById('abhaImport').click()">⇩ Simulate ABHA import</button></div>
+      <div class="row" role="search">
+        <input id="tlSearch" type="search" placeholder="Search timeline… e.g. metformin" aria-label="Search timeline" style="flex:1;min-width:160px;border:1px solid var(--line);border-radius:10px;padding:0 12px;min-height:44px">
+        <span id="tlChips" role="group" aria-label="Filter timeline">
+          <button class="btn small chip on" data-tlf="all">All</button>
+          <button class="btn small chip" data-tlf="meds">Meds</button>
+          <button class="btn small chip" data-tlf="labs">Labs</button>
+          <button class="btn small chip" data-tlf="visits">Visits</button>
+          <button class="btn small chip" data-tlf="wellness">Wellness</button>
+        </span>
+      </div>
       <div id="timelineBox"></div>
     </div>
     <div id="tab-fhir" class="card" hidden>
@@ -107,6 +122,7 @@
         <input type="file" id="importFile" accept=".json" hidden>
         <button class="btn small" id="abhaImport">⇩ Simulate ABHA/ABDM import</button>
       </div>
+      <div id="shareBox"></div>
       <pre id="fhirJson" class="json"></pre>
       <p class="muted small">Mock ABHA only — no real ABDM call. OTP for demo is <b>123456</b>. Bundle uses Patient + Observation (LOINC) + MedicationRequest + Condition (ICD-10/SNOMED CT) + DocumentReference. See <a href="docs/ARCHITECTURE.md" target="_blank">architecture doc</a>.</p>
     </div>

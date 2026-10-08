@@ -1,12 +1,12 @@
 # 🩺 Aarogya Copilot — AI-Powered Personal Health Copilot
 
-> **Judge in 60 seconds, no help needed.** Open the live URL → click 🧪 Lab report → 🔍 Review → Confirm & save → Simple summary → हिन्दी → Timeline (trends) → ABHA & FHIR → Export. Click ✅ Run self-check for 7/7 proof. No login, no key, works offline.
+> **Judge in 60 seconds, no help needed.** Open the live URL → click 🧪 Lab report → 🔍 Review → Confirm & save → Simple summary → हिन्दी → Timeline (trends) → ABHA & FHIR → Export. Click ✅ Run self-check for 11/11 proof. No login, no key, works offline.
 
 **What:** Caregiver uploads messy prescriptions, labs, discharge summaries → trustworthy health timeline + plain-language explanation.
 **Why:** Records are fragmented across paper, WhatsApp PDFs, labs. Caregiver job: “What changed, what meds are active, what to carry to doctor?”
 **How:** Upload → Classify → OCR → Extract with confidence + source span → **Human Review-before-save** → Active meds + lab trends + dose-change flags → Explain EN/HI/TE/TA → FHIR export + mock ABHA.
 **Tech:** Zero-backend static web app (HTML/CSS/JS, no build, fast). pdf.js + Tesseract.js (eng+hin/tel/tam), localStorage, optional Gemini 1.5 Flash. FHIR R4 + LOINC + ICD-10 + SNOMED CT, ABDM NRKES profiles.
-**Data:** 6 synthetic samples only, no real patients. `sample-data/07-master-test-matrix.csv` = 46 checks. Self-check 7/7 offline.
+**Data:** 6 synthetic samples only, no real patients. `sample-data/07-master-test-matrix.csv` = 46 checks. Self-check 11/11 offline (6 samples + FHIR bundle + 4 edge cases: negation, frequencies, dates, unit-confidence).
 **Value:** Fewer repeat tests, safer adherence, calmer doctor visits, regional access. Wedge: visible uncertainty + provenance + reconciliation, not generic chat.
 
 Built for **Altrix Labs — AI-Powered Personal Health Copilot** Round 1.
@@ -14,12 +14,12 @@ Built for **Altrix Labs — AI-Powered Personal Health Copilot** Round 1.
 ## ✨ Everything works — no dead buttons
 
 - **Add record:** drag PDF/JPG/PNG (progress bar) / paste text + Analyze / 6 one-click demos (💊🧪🏥🩻 + Rx-2/Lab-2)
-- **🔍 Review (trust gate):** low-confidence meds yellow-flagged with source snippet, editable dose/schedule, Confirm & save / Discard. Dose-changed vs earlier flagged. Nothing auto-saves uncertain.
-- **Simple summary:** headline, flagged labs with “what it means”, meds (names never translated), questions-to-ask-doctor, next steps, disclaimer + 🔊 Listen (en/hi/te/ta voices)
-- **Extracted data:** tables + Delete + Original OCR text expandable (provenance)
-- **Timeline:** active meds (latest per drug) + lab trend sparklines (rising/falling) + chronological events + wellness logs
-- **ABHA & FHIR:** mock Link ABHA (OTP `123456`), Simulate ABDM import, Export/Import FHIR JSON, resource counts + codes visible
-- **Side tools:** Setup profile, Log BP/sugar/weight, ✅ Run self-check, 🗑️ Clear, ⚙️ Settings (Gemini key optional + OCR lang), 🖨️ Print clean summary
+- **🔍 Review (trust gate):** low-confidence meds yellow-flagged with source snippet, editable dose/schedule, Confirm & save / Discard. Dose-changes offer Keep new / Keep earlier — your choice is logged. Nothing auto-saves uncertain.
+- **Simple summary:** headline, flagged labs with “what it means”, meds (names never translated), questions-to-ask-doctor, next steps, disclaimer + 🔊 Listen (en/hi/te/ta voices). 🖨️ Print produces a one-page doctor visit sheet.
+- **Extracted data:** tables + Delete + Original OCR text expandable (provenance) + 📜 provenance ledger (every value → doc, span, confidence, status)
+- **Timeline:** search + All/Meds/Labs/Visits/Wellness filters, active meds (latest per drug) + lab trend sparklines (rising/falling) + chronological events + wellness logs
+- **ABHA & FHIR:** ✅ FHIR R4 validity badge, mock Link ABHA (OTP `123456`), Simulate ABDM import, Export/Import FHIR JSON, 🔗 7-day revocable share link (mock consent)
+- **Side tools:** Setup profile, Log BP/sugar/weight, 🔔 daily log reminder (on-device only), ✅ Run self-check, 🗑️ Clear, ⚙️ Settings (Gemini key optional + OCR lang), 🖨️ Print clean summary. Installable PWA — works offline after first visit.
 - **Safety:** educational-only, hedged wording, no dose advice, emergency 108/112 banner always on top, negation guard (e.g. “dengue negative” not counted)
 
 ## 🚀 Start fast (30 sec)
@@ -29,7 +29,7 @@ python -m http.server 8000
 # → http://localhost:8000
 ```
 
-Or double-click `index.html`. Demos + paste-text + summaries work offline. PDF/OCR need internet once for CDN (pdf.js/Tesseract). Data stays in your browser.
+Or double-click `index.html`. Demos + paste-text + summaries work offline. Photo/PDF OCR needs internet once for CDN libraries (clear guidance shown in-app when offline). 10 MB per-file guard with plain-language errors. Data stays in your browser.
 
 ## 🧪 Test data (synthetic, safe)
 
@@ -46,7 +46,7 @@ Or double-click `index.html`. Demos + paste-text + summaries work offline. PDF/O
 ## 🏗️ Architecture
 
 See `docs/ARCHITECTURE.md` + `docs/architecture.svg` + `docs/TRUST_CARD.md`.
-Pipeline: ingest → OCR → rule extractor (confidence+span) → Review gate → trends/active-meds → 4-lang summarizer (+Gemini) → timeline → FHIR/ABHA mock. Zero backend; swap `abha*` stubs in `js/app.js` for real ABDM gateway in prod.
+Pipeline: ingest → multi-page OCR → rule extractor (confidence+span) → Review gate (Keep new/earlier) → trends/active-meds → 4-lang summarizer (+Gemini) → timeline (search+filters) → FHIR/ABHA mock + share. Zero backend; swap `abha*` stubs in `js/app.js` for real ABDM gateway in prod.
 
 ## 🌐 Deploy — Live URL field
 
