@@ -1,0 +1,13 @@
+Apollo Diagnostics, Hyderabad  Date: 10/03/2026  Patient: Ramesh Kumar 52/M
+CBC:
+Hemoglobin 11.2 g/dL (Ref 13-17) LOW
+WBC 11200 /uL (Ref 4000-11000) HIGH
+Platelets 165000 /uL (Ref 150000-450000)
+HbA1c 7.8 % (Ref <5.7 normal; 5.7-6.4 prediabetes; >=6.5 diabetes) HIGH
+Fasting Blood Sugar 142 mg/dL (Ref 70-100) HIGH
+Total Cholesterol 228 mg/dL (Ref <200) HIGH
+LDL 148 mg/dL (Ref <100) HIGH
+HDL 38 mg/dL (Ref >40) LOW
+Triglycerides 190 mg/dL (Ref <150) HIGH
+Creatinine 1.1 mg/dL (Ref 0.6-1.2) normal
+Impression: Poor glycemic control, dyslipidemia, mild anemia. Advise physician review.

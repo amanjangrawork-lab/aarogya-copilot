@@ -1,0 +1,10 @@
+CityCare Clinic, Hyderabad — Dr. Anitha Rao, MD
+Date: 12/03/2026  Patient: Ramesh Kumar, 52y M
+Diagnosis: Type 2 Diabetes Mellitus, Essential Hypertension
+Rx:
+1. Tab. Metformin 500mg — 1-0-1 after food x 30 days
+2. Tab. Glimepiride 1mg — 1-0-0 before breakfast x 30 days
+3. Tab. Amlodipine 5mg — 0-0-1 at bedtime x 30 days
+4. Tab. Atorvastatin 10mg — 0-0-1 HS x 30 days
+Advice: Low salt, low sugar diet, 30 min walk daily. Review after 1 month with FBS, PPBS, HbA1c.
+Next visit: 12/04/2026

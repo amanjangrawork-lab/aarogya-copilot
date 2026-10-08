@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="560" font-family="Segoe UI, Arial">
+<rect width="1000" height="560" fill="#f4f7fb"/>
+<text x="30" y="40" font-size="22" font-weight="bold" fill="#0a2540">Aarogya Copilot — Data pipeline + ABDM-ready schema</text>
+<text x="30" y="62" font-size="12" fill="#5b6b7f">Ingest → OCR → Extract → Summarize (4 langs) → Timeline → FHIR R4 / ABHA (mock)</text>
+<g font-size="12">
+<rect x="30" y="90" width="150" height="70" rx="10" fill="#fff" stroke="#0b6bcb"/><text x="40" y="112" font-weight="bold">Ingest</text><text x="40" y="130">PDF / JPG / PNG</text><text x="40" y="146">paste text</text>
+<rect x="200" y="90" width="170" height="70" rx="10" fill="#fff" stroke="#0b6bcb"/><text x="210" y="112" font-weight="bold">OCR (pdf.js +</text><text x="210" y="128" font-weight="bold">Tesseract.js)</text><text x="210" y="146">eng+hin+tel+tam</text>
+<rect x="390" y="90" width="170" height="70" rx="10" fill="#fff" stroke="#0b6bcb"/><text x="400" y="112" font-weight="bold">Extractor (rules)</text><text x="400" y="130">meds · labs+LOINC</text><text x="400" y="146">dx ICD-10 · dates</text>
+<rect x="580" y="90" width="170" height="70" rx="10" fill="#fff" stroke="#0b6bcb"/><text x="590" y="112" font-weight="bold">Summarizer</text><text x="590" y="130">EN/HI/TE/TA +</text><text x="590" y="146">Gemini (optional)</text>
+<rect x="770" y="90" width="200" height="70" rx="10" fill="#e3f0ff" stroke="#0a2540"/><text x="780" y="112" font-weight="bold">Timeline + Profile</text><text x="780" y="130">records + wellness</text><text x="780" y="146">localStorage</text>
+<rect x="200" y="200" width="600" height="120" rx="10" fill="#0a2540"/><text x="220" y="226" font-weight="bold" fill="#fff">FHIR R4 Bundle (ABDM NRKES profiles)</text><text x="220" y="246" fill="#c8e1ff">Patient.identifier = ABHA · Observation.code = LOINC · Condition = ICD-10 + SNOMED CT</text><text x="220" y="266" fill="#c8e1ff">MedicationRequest · DocumentReference · Export/Import JSON</text><text x="220" y="296" fill="#ffd166">Mock ABHA link (OTP 123456) + mock ABDM import — swap for real gateway in prod</text>
+<rect x="30" y="350" width="940" height="170" rx="10" fill="#fff" stroke="#e2e9f2"/><text x="50" y="376" font-weight="bold">Safety + privacy (judges check this)</text><text x="50" y="398">• Hedged plain language, no dose changes, emergency + disclaimer banners • Abnormal vs borderline distinguished</text><text x="50" y="420">• Zero backend — data stays in browser; Gemini key optional, never required, never sent anywhere else</text><text x="50" y="442">• 1-click demo: Prescription / Lab / Discharge → Summary → Timeline → Export FHIR (60-second judge path)</text><text x="50" y="464">• Bonus: UI + summaries in English / हिन्दी / తెలుగు / தமிழ் · OCR langs eng+hin+tel+tam · FHIR/SNOMED/LOINC aligned</text><text x="50" y="496" fill="#0b6bcb">Scoring map: AI 35% (OCR+extraction+summary) · Arch 25% (pipeline+FHIR) · UX 20% (upload+timeline+i18n) · Impact 10% (safety) · Demo 10% (slides)</text>
+</g>
+<g stroke="#0b6bcb" stroke-width="2" marker-end="none">
+<line x1="180" y1="125" x2="200" y2="125"/><line x1="370" y1="125" x2="390" y2="125"/><line x1="560" y1="125" x2="580" y2="125"/><line x1="750" y1="125" x2="770" y2="125"/>
+<line x1="500" y1="160" x2="500" y2="200"/>
+</g></svg>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aarogya Copilot — AI Personal Health Copilot</title>
+<meta name="description" content="AI-powered Personal Health Copilot: OCR + extraction + plain-language summaries + timeline + ABDM/FHIR-ready. Built for Altrix Labs challenge.">
+<link rel="stylesheet" href="css/styles.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+</head>
+<body>
+<header class="top">
+  <div class="brand"><span class="logo">🩺</span><div><b>Aarogya Copilot</b><small>AI Personal Health Copilot · Altrix Labs Challenge</small></div></div>
+  <div class="top-actions">
+    <select id="langSel" title="Language / भाषा">
+      <option value="en">English</option><option value="hi">हिन्दी</option>
+      <option value="te">తెలుగు</option><option value="ta">தமிழ்</option>
+    </select>
+    <button class="btn ghost" id="settingsBtn">⚙️</button>
+    <button class="btn ghost" id="printBtn">🖨️</button>
+    <button class="btn primary" id="abhaBtn" data-i18n="linkAbha">Link ABHA</button>
+  </div>
+</header>
+
+<main class="layout">
+  <aside class="side">
+    <div class="card" id="profileCard"></div>
+    <div class="card">
+      <button class="btn full" id="profileBtn">👤 Setup profile</button>
+      <button class="btn full" id="wellBtn" data-i18n="addWellness">Log BP / sugar / weight</button>
+      <button class="btn full ghost" id="clearBtn">🗑️ Clear demo data</button>
+      <p class="muted small" data-i18n="disclaimer">Educational only — not medical advice. Always consult your doctor.</p>
+      <p class="muted small"><a href="slides.html" target="_blank">📽️ Demo slides</a> · <a href="docs/ARCHITECTURE.md" target="_blank">🏗️ Architecture</a></p>
+    </div>
+    <div class="card small-card">
+      <b>Judge fast-track (60 sec)</b>
+      <ol class="small"><li>Click a demo button below</li><li>See Simple summary → flags + plain meaning</li><li>Open Health timeline + ABHA &amp; FHIR → Export</li></ol>
+    </div>
+  </aside>
+
+  <section class="main">
+    <div class="hero">
+      <h1>Aarogya Copilot <span class="pill">ABDM-ready · 4 languages · offline-first</span></h1>
+      <p data-i18n="tagline">Understand your prescriptions, labs &amp; discharge summaries — in plain language.</p>
+    </div>
+
+    <div class="card">
+      <h3 data-i18n="uploadTitle">Add a health record</h3>
+      <div class="drop" id="drop">📁 <span data-i18n="drop">Drag &amp; drop PDF / JPG / PNG here, or click to browse</span>
+        <input type="file" id="fileInput" accept=".pdf,.png,.jpg,.jpeg,.txt" multiple hidden>
+        <div class="bar"><div id="ocrBar"></div></div>
+      </div>
+      <div class="demo-row"><span data-i18n="demo">Try 1-click demo data:</span>
+        <span id="demoBtns">
+          <button class="btn chip" data-sample="rx">💊 Prescription</button>
+          <button class="btn chip" data-sample="lab">🧪 Lab report</button>
+          <button class="btn chip" data-sample="discharge">🏥 Discharge</button>
+        </span>
+      </div>
+      <label class="lbl" data-i18n="paste">Or paste report text</label>
+      <textarea id="pasteBox" rows="4" placeholder="Paste prescription / lab / discharge text here… (works fully offline)"></textarea>
+      <div class="row"><button class="btn primary" id="analyzeBtn" data-i18n="analyze">Analyze record</button>
+      <span id="status" class="status"></span></div>
+    </div>
+
+    <nav class="tabs">
+      <button class="tab active" data-tab="summary" data-i18n="tabSummary">Simple summary</button>
+      <button class="tab" data-tab="data" data-i18n="tabData">Extracted data</button>
+      <button class="tab" data-tab="timeline" data-i18n="tabTimeline">Health timeline</button>
+      <button class="tab" data-tab="fhir" data-i18n="tabFhir">ABHA &amp; FHIR</button>
+    </nav>
+
+    <div id="tab-summary" class="card"><div id="summaryBox"></div><div id="geminiBox"></div></div>
+    <div id="tab-data" class="card" hidden><div id="dataBox"></div></div>
+    <div id="tab-timeline" class="card" hidden>
+      <div class="row"><h3 style="margin:0">Unified timeline</h3><button class="btn small" id="abhaImport2" onclick="document.getElementById('abhaImport').click()">⇩ Simulate ABHA import</button></div>
+      <div id="timelineBox"></div>
+    </div>
+    <div id="tab-fhir" class="card" hidden>
+      <h3>ABHA (mock) + FHIR R4 bundle <span class="pill">ABDM NRKES profiles</span></h3>
+      <div id="fhirMeta"></div>
+      <div class="row">
+        <button class="btn primary small" id="exportBtn" data-i18n="export">Export FHIR JSON</button>
+        <button class="btn small" id="importBtn" data-i18n="import">Import FHIR JSON</button>
+        <input type="file" id="importFile" accept=".json" hidden>
+        <button class="btn small" id="abhaImport">⇩ Simulate ABHA/ABDM import</button>
+      </div>
+      <pre id="fhirJson" class="json"></pre>
+      <p class="muted small">Mock ABHA only — no real ABDM call. OTP for demo is <b>123456</b>. Bundle uses Patient + Observation (LOINC) + MedicationRequest + Condition (ICD-10/SNOMED CT) + DocumentReference. See <a href="docs/ARCHITECTURE.md" target="_blank">architecture doc</a>.</p>
+    </div>
+  </section>
+</main>
+
+<footer>⚠️ Educational summaries only — not a diagnosis. In an emergency seek care immediately. · Data stays in your browser (localStorage). · Built for the Altrix Labs AI Health Copilot challenge.</footer>
+
+<dialog id="profileModal"><form method="dialog"><h3>Health profile</h3>
+<label>Name <input id="fName" placeholder="e.g. Ramesh Kumar"></label>
+<div class="grid2"><label>Age <input id="fAge" placeholder="52"></label>
+<label>Gender <select id="fGender"><option value="male">Male</option><option value="female">Female</option><option value="other">Other</option></select></label></div>
+<div class="grid2"><label>Phone <input id="fPhone" placeholder="98XXXXXX00"></label><label>DOB <input id="fDob" type="date"></label></div>
+<div class="row"><button class="btn primary" id="saveProfile">Save</button><button class="btn ghost">Close</button></div></form></dialog>
+
+<dialog id="abhaModal"><form method="dialog"><h3>Link ABHA (mock demo)</h3>
+<p class="muted small">Simulates ABDM ABHA address linking. No real network call; demo OTP is <b>123456</b>.</p>
+<label>Mobile <input id="abhaPhone" placeholder="10-digit mobile"></label>
+<button class="btn small" id="abhaSend" type="button">Send OTP</button>
+<div id="abhaOtpRow" hidden><label>OTP <input id="abhaOtp" placeholder="123456"></label>
+<button class="btn primary" id="abhaVerify" type="button">Verify &amp; link</button></div>
+<p id="abhaMsg" class="status"></p><button class="btn ghost">Close</button></form></dialog>
+
+<dialog id="wellModal"><form method="dialog"><h3>Log wellness</h3>
+<div class="grid2"><label>Date <input id="wDate" type="date"></label><label>BP <input id="wBp" placeholder="120/80"></label></div>
+<div class="grid2"><label>Sugar <input id="wSugar" placeholder="110 mg/dL"></label><label>Weight <input id="wWt" placeholder="72 kg"></label></div>
+<label>Note <input id="wNote" placeholder="walked 30 min, felt fine"></label>
+<div class="row"><button class="btn primary" id="saveWell">Save</button><button class="btn ghost">Close</button></div></form></dialog>
+
+<dialog id="setModal"><form method="dialog"><h3>Settings</h3>
+<label>Gemini API key (optional, for enhanced summary) <input id="gemKey" type="password" placeholder="AIza…"></label>
+<label>OCR language <select id="ocrLang"><option value="eng">English</option><option value="hin">+ Hindi (हिन्दी)</option><option value="tel">+ Telugu (తెలుగు)</option><option value="tam">+ Tamil (தமிழ்)</option></select></label>
+<p class="muted small">Offline extraction + summaries always work. Key is stored only in this browser's memory.</p>
+<div class="row"><button class="btn primary" id="saveSet">Save</button><button class="btn ghost">Close</button></div></form></dialog>
+
+<script src="js/reference.js"></script>
+<script src="js/extractor.js"></script>
+<script src="js/summarizer.js"></script>
+<script src="js/fhir.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/ocr.js"></script>
+<script src="js/samples.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
