@@ -21,7 +21,7 @@ Built for **Altrix Labs — AI-Powered Personal Health Copilot** Round 1.
 - **Timeline:** search + All/Meds/Labs/Visits/Wellness filters, active meds (latest per drug) + lab trend sparklines (rising/falling) + chronological events + wellness logs
 - **ABHA & FHIR:** ✅ FHIR R4 validity badge, mock Link ABHA (OTP `123456`), Simulate ABDM import, Export/Import FHIR JSON, 🔗 7-day revocable share link (mock consent)
 - **Side tools:** Setup profile, Log BP/sugar/weight, 🔔 daily log reminder (on-device only), ⚙️ Settings (Gemini key optional + OCR lang + diagnostics 11/11 + erase-all), 🖨️ one-page doctor visit sheet. Installable PWA — works offline after first visit.
-- **Safety:** educational-only, hedged wording, no dose advice, emergency 108/112 banner always on top, negation guard (e.g. “dengue negative” not counted)
+- **Safety:** educational-only, hedged wording, no dose advice, SOS tap-to-call card (108/112) always visible, negation guard (e.g. “dengue negative” not counted)
 
 ## 🚀 Start fast (30 sec)
 
@@ -42,17 +42,16 @@ Or double-click `index.html`. Demos + paste-text + summaries work offline. Photo
 - `06-lab-report-thyroid-vitd.txt` — TSH 8.2 ▲, Vit-D 18 ▼
 - `07-master-test-matrix.csv` — 46 expected checks
 - `make-ocr-samples.html` — 1-click PNG (Tesseract path) + PDF (pdf.js path) generator
-- In-app demos load the same content instantly
+- The in-app example loader serves the same content instantly (no files needed to evaluate)
 
 ## 🏗️ Architecture
 
 See `docs/ARCHITECTURE.md` + `docs/architecture.svg` + `docs/TRUST_CARD.md`.
 Pipeline: ingest → multi-page OCR → rule extractor (confidence+span) → Review gate (Keep new/earlier) → trends/active-meds → 4-lang summarizer (+Gemini) → timeline (search+filters) → FHIR/ABHA mock + share. Zero backend; swap `abha*` stubs in `js/app.js` for real ABDM gateway in prod.
 
-## 🌐 Deploy — Live URL field
+## 🌐 Live demo
 
-**GitHub Pages:** push folder → Settings → Pages → Deploy from branch → `main` `/root` → `https://<you>.github.io/<repo>/`.
-**Vercel/Netlify:** import repo, no build, output `.`. Verify: example Lab → Review → Hindi → Timeline → Export.
+**https://amanjangrawork-lab.github.io/aarogya-copilot/** — fast static PWA, no login. Verify: example Lab → Review → Hindi → Timeline → Export.
 
 ## 📽️ Demo + evaluation
 
